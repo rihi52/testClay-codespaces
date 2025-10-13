@@ -6,8 +6,8 @@ set(CMAKE_C_STANDARD 11)
 # --- Sources ---
 set(SOURCES
     SDL2-video-demo/main.c
-    clay_renderer_SDL2.c
-    shared-layouts/clay-video-demo.c
+    # clay_renderer_SDL2.c
+    # shared-layouts/clay-video-demo.c
 )
 
 add_executable(clay_sdl2_video_demo ${SOURCES})
