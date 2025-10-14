@@ -5,7 +5,7 @@ set(CMAKE_C_STANDARD 11)
 
 # --- Sources ---
 set(SOURCES
-    SDL2-video-demo/main.c
+    src/main.c
     # clay_renderer_SDL2.c
     # shared-layouts/clay-video-demo.c
 )
@@ -14,7 +14,7 @@ add_executable(clay_sdl2_video_demo ${SOURCES})
 
 # --- Emscripten settings ---
 set(CMAKE_EXECUTABLE_SUFFIX ".html")
-set(RESOURCE_PATH "${CMAKE_SOURCE_DIR}/SDL2-video-demo/resources")
+set(RESOURCE_PATH "${CMAKE_SOURCE_DIR}/resources")
 set(PRELOAD_FLAG "--preload-file ${RESOURCE_PATH}@/resources")
 
 # This is the magic: add the flags to COMPILE_FLAGS and LINK_FLAGS

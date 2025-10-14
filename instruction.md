@@ -9,5 +9,13 @@ build
 ```bash
 mkdir build && cd build
 emcmake cmake ..
-emcmake make
+emmake make
+
+# Flag for a release build
+emcmake cmake .. -DCMAKE_BUILD_TYPE=Release
+```
+
+``` bash
+#To view html:
+python3 -m http.server 8080
 ```

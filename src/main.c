@@ -9,20 +9,71 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include "../shared-layouts/clay-video-demo.c"
-
-SDL_Surface *sample_image;
 
 void HandleClayErrors(Clay_ErrorData errorData) {
     printf("%s", errorData.errorText.chars);
 }
 
+/*-------------------------------------------------------------------------------------------*
+*                                     START COPY                                             *
+*--------------------------------------------------------------------------------------------*/
+
+const int FONT_ID_BODY_16 = 0;
+
+static const Uint32 FONT_ID = 0;
+
+const Clay_LayoutConfig ParentWindow = (Clay_LayoutConfig) {
+    .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0)},
+    .padding = { 16, 16, 16, 16},
+    .childGap = 16,
+    .childAlignment =  { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER },
+    .layoutDirection = CLAY_LEFT_TO_RIGHT
+};
+
+Clay_RenderCommandArray ClayRedBackgroundLayout(void)
+{
+    Clay_BeginLayout();
+
+    Clay_Sizing layoutExpand = {
+    .width = CLAY_SIZING_GROW(0),
+    .height = CLAY_SIZING_GROW(0)
+    };
+
+    // Define one element that covers the whole screen
+    CLAY(CLAY_ID("OuterContainer"), {
+        ParentWindow,
+        .backgroundColor = { 50, 50, 50, 255 }
+    }) {/* Center container start */
+        CLAY(CLAY_ID("CenterContainer"), {
+        ParentWindow,
+        .cornerRadius = CLAY_CORNER_RADIUS(25),
+        .backgroundColor = { 100, 100, 100, 255 }
+        }) {/* Build button start */
+            CLAY(CLAY_ID("BuildButton"), {
+            .layout = { .padding = { 16, 16, 8, 8 }},
+            .backgroundColor = {85, 255, 85, 255 },
+            .cornerRadius = CLAY_CORNER_RADIUS(15)
+            }) {
+                CLAY_TEXT(CLAY_STRING("Build Encounter"), CLAY_TEXT_CONFIG({
+                    .fontId = FONT_ID_BODY_16,
+                    .fontSize = 16,
+                    .textColor = { 0, 0, 0, 255}
+                }));
+            }/* Build button end */ 
+        };        
+    };
+
+    return Clay_EndLayout();
+}
+
+/*-------------------------------------------------------------------------------------------*
+*                                       END COPY                                             *
+*--------------------------------------------------------------------------------------------*/
 
 struct ResizeRenderData_ {
     SDL_Window* window;
     int windowWidth;
     int windowHeight;
-    ClayVideoDemo_Data demoData;
     SDL_Renderer* renderer;
     SDL2_Font* fonts;
 };
@@ -34,14 +85,13 @@ int resizeRendering(void* userData, SDL_Event* event) {
         SDL_Window* window          = actualData->window;
         int windowWidth             = actualData->windowWidth;
         int windowHeight            = actualData->windowHeight;
-        ClayVideoDemo_Data demoData = actualData->demoData;
         SDL_Renderer* renderer      = actualData->renderer;
         SDL2_Font* fonts            = actualData->fonts;
 
         SDL_GetWindowSize(window, &windowWidth, &windowHeight);
         Clay_SetLayoutDimensions((Clay_Dimensions) { (float)windowWidth, (float)windowHeight });
 
-        Clay_RenderCommandArray renderCommands = ClayVideoDemo_CreateLayout(&demoData);
+        Clay_RenderCommandArray renderCommands = ClayRedBackgroundLayout()/*ClayVideoDemo_CreateLayout(&demoData)*/;
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
@@ -79,8 +129,6 @@ int main(int argc, char *argv[]) {
         .font = font,
     };
 
-    sample_image = IMG_Load("resources/sample.png");
-
     SDL_Window *window = NULL;
     SDL_Renderer *renderer = NULL;
   
@@ -106,14 +154,12 @@ int main(int argc, char *argv[]) {
     Uint64 NOW = SDL_GetPerformanceCounter();
     Uint64 LAST = 0;
     double deltaTime = 0;
-    ClayVideoDemo_Data demoData = ClayVideoDemo_Initialize();
 
     
     ResizeRenderData userData = {
         window, // SDL_Window*
         windowWidth, // int
         windowHeight, // int
-        demoData, // CustomShit
         renderer, // SDL_Renderer*
         fonts // SDL2_Font[1]
     };
@@ -153,7 +199,7 @@ int main(int argc, char *argv[]) {
         SDL_GetWindowSize(window, &windowWidth, &windowHeight);
         Clay_SetLayoutDimensions((Clay_Dimensions) { (float)windowWidth, (float)windowHeight });
 
-        Clay_RenderCommandArray renderCommands = ClayVideoDemo_CreateLayout(&demoData);
+        Clay_RenderCommandArray renderCommands = ClayRedBackgroundLayout();
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
