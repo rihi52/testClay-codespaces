@@ -30,6 +30,14 @@ const Clay_LayoutConfig ParentWindow = (Clay_LayoutConfig) {
     .layoutDirection = CLAY_LEFT_TO_RIGHT
 };
 
+const Clay_LayoutConfig ChildWindow = (Clay_LayoutConfig) {
+    .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0)},
+    .padding = { 16, 16, 16, 16},
+    .childGap = 16,
+    .childAlignment =  { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER },
+    .layoutDirection = CLAY_LEFT_TO_RIGHT
+};
+
 Clay_RenderCommandArray ClayRedBackgroundLayout(void)
 {
     Clay_BeginLayout();
@@ -45,7 +53,7 @@ Clay_RenderCommandArray ClayRedBackgroundLayout(void)
         .backgroundColor = { 50, 50, 50, 255 }
     }) {/* Center container start */
         CLAY(CLAY_ID("CenterContainer"), {
-        ParentWindow,
+        ChildWindow,
         .cornerRadius = CLAY_CORNER_RADIUS(25),
         .backgroundColor = { 100, 100, 100, 255 }
         }) {/* Build button start */
@@ -55,6 +63,19 @@ Clay_RenderCommandArray ClayRedBackgroundLayout(void)
             .cornerRadius = CLAY_CORNER_RADIUS(15)
             }) {
                 CLAY_TEXT(CLAY_STRING("Build Encounter"), CLAY_TEXT_CONFIG({
+                    .fontId = FONT_ID_BODY_16,
+                    .fontSize = 16,
+                    .textColor = { 0, 0, 0, 255}
+                }));
+            }/* Build button end */ 
+        }
+        {/* Build button start */
+            CLAY(CLAY_ID("StartButton"), {
+            .layout = { .padding = { 16, 16, 8, 8 }},
+            .backgroundColor = {85, 255, 85, 255 },
+            .cornerRadius = CLAY_CORNER_RADIUS(15)
+            }) {
+                CLAY_TEXT(CLAY_STRING("Start Encounter"), CLAY_TEXT_CONFIG({
                     .fontId = FONT_ID_BODY_16,
                     .fontSize = 16,
                     .textColor = { 0, 0, 0, 255}

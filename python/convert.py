@@ -12,7 +12,8 @@ headers = [
     "ALIGNMENT","LEGENDARY","STR","DEX","CON","INT","WIS","CHA","PROF_BONUS",
     "THROW_STR","THROW_DEX","THROW_CON","THROW_INT","THROW_WIS","THROW_CHA",
     "SKILLS","LANGUAGES","SENSES","RANGE_DARKVISION","RANGE_TREMORSENSE","RANGE_BLINDSIGHT","RANGE_TRUESIGHT",
-    "ABILITY_ONE","ABILITY_ONE_DESC","ABILITY_TWO","ABILITY_TWO_DESC","ABILITY_THREE","ABILITY_THREE_DESC","ABILITY_FOUR","ABILITY_FOUR_DESC",
+    "SPECIAL_ABILITY_ONE","SPECIAL_ABILITY_ONE_DESC","SPECIAL_ABILITY_TWO","SPECIAL_ABILITY_TWO_DESC",
+    "SPECIAL_ABILITY_THREE","SPECIAL_ABILITY_THREE_DESC","SPECIAL_ABILITY_FOUR","SPECIAL_ABILITY_FOUR_DESC",
     "ATTACK_1","ATTACK_1_DESC","ATTACK_2","ATTACK_2_DESC","ATTACK_3","ATTACK_3_DESC","ATTACK_4","ATTACK_4_DESC","ATTACK_5_TYPE","ATTACK_5_DESC",
     "ACTION_LEG","ACTION_LEG1","ACTION_LEG1_DESC","ACTION_LEG2","ACTION_LEG2_DESC","ACTION_LEG3","ACTION_LEG3_DESC",
     "ACTION_LAIR","ACTION_LAIR1","ACTION_LAIR1_DESC","ACTION_LAIR2","ACTION_LAIR2_DESC","ACTION_LAIR3","ACTION_LAIR3_DESC",
@@ -27,14 +28,13 @@ headers = [
 # === HELPER FUNCTIONS ===
 
 def get_value(data, key, default=0):
-    """Safely get a key from a dict with fallback."""
     return data.get(key, default) if isinstance(data, dict) else default
 
 def extract_first_n(entries, n):
     """Extract up to n (name, desc) pairs from a list of dictionaries."""
     pairs = []
     for i in range(n):
-        if i < len(entries):
+        if isinstance(entries, list) and i < len(entries):
             name = entries[i].get("name", 0)
             desc = entries[i].get("desc", 0)
         else:
@@ -43,24 +43,67 @@ def extract_first_n(entries, n):
     return pairs
 
 def extract_speed(speed_dict):
-    """Normalize speeds to 0 if missing."""
-    return {
-        "type": ", ".join(speed_dict.keys()) if speed_dict else 0,
-        "walk": get_value(speed_dict, "walk", 0),
-        "fly": get_value(speed_dict, "fly", 0),
-        "swim": get_value(speed_dict, "swim", 0),
-        "climb": get_value(speed_dict, "climb", 0),
-        "burrow": get_value(speed_dict, "burrow", 0)
-    }
+    out = {"type": 0, "walk": 0, "fly": 0, "swim": 0, "climb": 0, "burrow": 0}
+    if not isinstance(speed_dict, dict):
+        return out
+    if speed_dict:
+        out["type"] = ",".join(sorted(speed_dict.keys()))
+    def parse_speed(val):
+        if val is None:
+            return 0
+        if isinstance(val, int):
+            return val
+        if isinstance(val, str):
+            digits = ''.join(ch for ch in val if ch.isdigit())
+            return int(digits) if digits else 0
+        return 0
+    out["walk"] = parse_speed(speed_dict.get("walk", 0))
+    out["fly"] = parse_speed(speed_dict.get("fly", 0))
+    out["swim"] = parse_speed(speed_dict.get("swim", 0))
+    out["climb"] = parse_speed(speed_dict.get("climb", 0))
+    out["burrow"] = parse_speed(speed_dict.get("burrow", 0))
+    return out
 
 def extract_range(senses, key):
-    """Extract range from sense description."""
     val = get_value(senses, key, 0)
     if isinstance(val, int):
         return val
-    if isinstance(val, str) and any(ch.isdigit() for ch in val):
-        return int(''.join(ch for ch in val if ch.isdigit()))
+    if isinstance(val, str):
+        digits = ''.join(ch for ch in val if ch.isdigit())
+        return int(digits) if digits else 0
     return 0
+
+def parse_saving_throws(mon):
+    throws = {"STR":0,"DEX":0,"CON":0,"INT":0,"WIS":0,"CHA":0}
+    saving_throws = mon.get("saving_throws") or mon.get("saves")
+    if isinstance(saving_throws, dict) and saving_throws:
+        mapping = {
+            "str": "STR", "strength": "STR",
+            "dex": "DEX", "dexterity": "DEX",
+            "con": "CON", "constitution": "CON",
+            "int": "INT", "intelligence": "INT",
+            "wis": "WIS", "wisdom": "WIS",
+            "cha": "CHA", "charisma": "CHA"
+        }
+        for k, v in saving_throws.items():
+            key_lower = k.lower()
+            if key_lower in mapping:
+                sval = ''.join(ch for ch in str(v) if ch in "-0123456789")
+                throws[mapping[key_lower]] = int(sval) if sval else 0
+        return throws
+    profs = mon.get("proficiencies", [])
+    if isinstance(profs, list):
+        for p in profs:
+            val = p.get("value", None)
+            prof = p.get("proficiency", {})
+            pname = prof.get("name", "") or prof.get("index", "")
+            if isinstance(pname, str):
+                name_lower = pname.lower()
+                if "saving throw" in name_lower:
+                    for ab in ["str","dex","con","int","wis","cha"]:
+                        if ab in name_lower:
+                            throws[ab.upper()] = int(val) if val is not None else 0
+    return throws
 
 # === MAIN CONVERSION ===
 
@@ -82,82 +125,78 @@ with open(OUTPUT_CSV, "w", newline='', encoding="utf-8") as csvfile:
 
         # Armor class
         if isinstance(mon.get("armor_class"), list) and mon["armor_class"]:
-            row["ARMOR_CLASS"] = mon["armor_class"][0].get("ac", 0)
+            ac_item = mon["armor_class"][0]
+            row["ARMOR_CLASS"] = ac_item.get("value") or ac_item.get("ac") or 0
         elif isinstance(mon.get("armor_class"), dict):
             row["ARMOR_CLASS"] = mon["armor_class"].get("ac", 0)
         else:
             row["ARMOR_CLASS"] = mon.get("armor_class", 0)
 
         # Hit points
-        hp = mon.get("hit_points", {})
-        if isinstance(hp, dict):
-            row["HITPOINTS_AVG"] = get_value(hp, "average", 0)
-            row["HIT_DICE"] = get_value(hp, "formula", 0)
-            row["HITPOINTS_ROLL"] = get_value(hp, "formula", 0)
+        if isinstance(mon.get("hit_points"), int):
+            row["HITPOINTS_AVG"] = mon["hit_points"]
+        elif isinstance(mon.get("hit_points"), dict):
+            row["HITPOINTS_AVG"] = mon["hit_points"].get("average", mon["hit_points"].get("value", 0))
         else:
             row["HITPOINTS_AVG"] = mon.get("hit_points", 0)
+        row["HIT_DICE"] = mon.get("hit_dice", 0)
+        row["HITPOINTS_ROLL"] = mon.get("hit_points_roll", 0)
 
         # Speed
         speeds = extract_speed(mon.get("speed", {}))
-        row["SPEED_TYPE"] = speeds["type"]
-        row["SPEED_WALK"] = speeds["walk"]
-        row["SPEED_FLY"] = speeds["fly"]
-        row["SPEED_SWIM"] = speeds["swim"]
-        row["SPEED_CLIMB"] = speeds["climb"]
-        row["SPEED_BURROW"] = speeds["burrow"]
+        for k, v in speeds.items():
+            row[f"SPEED_{k.upper()}"] = v
 
-        # Abilities
-        stats = mon.get("stats", [0, 0, 0, 0, 0, 0])
-        for k, ability in zip(["STR", "DEX", "CON", "INT", "WIS", "CHA"], stats):
-            row[k] = ability
+        # Ability scores
+        stats_list = mon.get("stats", [])
+        for key, idx in zip(["STR","DEX","CON","INT","WIS","CHA"], range(6)):
+            row[key] = int(mon.get(key.lower(), stats_list[idx] if len(stats_list) > idx else 0) or 0)
 
-        # Traits
-        traits = extract_first_n(mon.get("traits", []), 4)
-        for idx, (name, desc) in enumerate(traits, start=1):
-            row[f"ABILITY_{['ONE','TWO','THREE','FOUR'][idx-1]}"] = name
-            row[f"ABILITY_{['ONE','TWO','THREE','FOUR'][idx-1]}_DESC"] = desc
+        # Prof bonus
+        row["PROF_BONUS"] = mon.get("proficiency_bonus", mon.get("proficiency", 0)) or 0
 
-        # Actions
-        actions = extract_first_n(mon.get("actions", []), 5)
-        for idx, (name, desc) in enumerate(actions, start=1):
-            if idx < 5:
-                row[f"ATTACK_{idx}"] = name
-                row[f"ATTACK_{idx}_DESC"] = desc
-            else:
-                row["ATTACK_5_TYPE"] = name
-                row["ATTACK_5_DESC"] = desc
+        # Saving throws
+        throws = parse_saving_throws(mon)
+        for ab in ["STR","DEX","CON","INT","WIS","CHA"]:
+            row[f"THROW_{ab}"] = throws.get(ab, 0)
 
-        # Legendary Actions
-        legs = extract_first_n(mon.get("legendary_actions", []), 3)
-        if legs and any(a[0] != 0 for a in legs):
-            row["LEGENDARY"] = "Legendary"
-        for idx, (name, desc) in enumerate(legs, start=1):
-            row[f"ACTION_LEG{idx}"] = name
-            row[f"ACTION_LEG{idx}_DESC"] = desc
+        # Skills
+        skills_obj = mon.get("skills", {})
+        if isinstance(skills_obj, dict) and skills_obj:
+            row["SKILLS"] = ", ".join(f"{k.upper()} +{v}" for k, v in skills_obj.items())
+        else:
+            row["SKILLS"] = 0
 
-        # Lair Actions
-        lairs = extract_first_n(mon.get("lair_actions", []), 3)
-        for idx, (name, desc) in enumerate(lairs, start=1):
-            row[f"ACTION_LAIR{idx}"] = name
-            row[f"ACTION_LAIR{idx}_DESC"] = desc
+        # Languages
+        langs = mon.get("languages", 0)
+        row["LANGUAGES"] = ", ".join(langs) if isinstance(langs, list) else langs or 0
 
-        # Regional Effects
-        regs = mon.get("regional_effects", [])
-        for j in range(3):
-            row[f"REGIONALEFFECT{j+1}"] = regs[j] if j < len(regs) else 0
-
-        # Skills, Languages, Senses
-        row["SKILLS"] = ", ".join(f"{k.upper()} {v}" for k, v in mon.get("skills", {}).items()) or 0
-        row["LANGUAGES"] = ", ".join(mon.get("languages", [])) or 0
+        # Senses
         senses = mon.get("senses", {})
-        row["SENSES"] = ", ".join(f"{k} {v}" for k, v in senses.items()) or 0
-        row["RANGE_DARKVISION"] = extract_range(senses, "darkvision")
-        row["RANGE_TREMORSENSE"] = extract_range(senses, "tremorsense")
-        row["RANGE_BLINDSIGHT"] = extract_range(senses, "blindsight")
-        row["RANGE_TRUESIGHT"] = extract_range(senses, "truesight")
+        if isinstance(senses, dict) and senses:
+            row["SENSES"] = ", ".join(f"{k} {v}" for k,v in senses.items())
+            for sense in ["darkvision","tremorsense","blindsight","truesight"]:
+                row[f"RANGE_{sense.upper()}"] = extract_range(senses, sense)
 
         # Environment
-        row["ENVIRONMENT"] = ", ".join(mon.get("environments", [])) or 0
+        env = mon.get("environments", mon.get("environment", mon.get("environment_list", [])))
+        row["ENVIRONMENT"] = ", ".join(env) if isinstance(env, list) else env or 0
+
+        # === SPECIAL ABILITIES ===
+        special_abilities = extract_first_n(mon.get("special_abilities", []), 4)
+        for idx, (name, desc) in enumerate(special_abilities, start=1):
+            row[f"SPECIAL_ABILITY_{['ONE','TWO','THREE','FOUR'][idx-1]}"] = name
+            row[f"SPECIAL_ABILITY_{['ONE','TWO','THREE','FOUR'][idx-1]}_DESC"] = desc
+
+        # === ATTACKS / ACTIONS ===
+        attacks = extract_first_n(mon.get("actions", []), 5)
+        for idx, (name, desc) in enumerate(attacks, start=1):
+            if idx == 5:
+                row["ATTACK_5_TYPE"] = name
+                row["ATTACK_5_DESC"] = desc
+            else:
+                row[f"ATTACK_{idx}"] = name
+                row[f"ATTACK_{idx}_DESC"] = desc
 
         writer.writerow(row)
 
