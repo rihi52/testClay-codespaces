@@ -9,34 +9,45 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
-
-void HandleClayErrors(Clay_ErrorData errorData) {
-    printf("%s", errorData.errorText.chars);
-}
+#include "styles.h"
 
 /*-------------------------------------------------------------------------------------------*
 *                                     START COPY                                             *
 *--------------------------------------------------------------------------------------------*/
 
 const int FONT_ID_BODY_16 = 0;
+const int FONT_ID_BODY_32 = 0;
+Clay_Color COLOR_WHITE = { 255, 255, 255, 255};
 
 static const Uint32 FONT_ID = 0;
 
-const Clay_LayoutConfig ParentWindow = (Clay_LayoutConfig) {
-    .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0)},
-    .padding = { 16, 16, 16, 16},
-    .childGap = 16,
-    .childAlignment =  { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER },
-    .layoutDirection = CLAY_LEFT_TO_RIGHT
-};
+static const Clay_Color COLOR_ORANGE    = (Clay_Color) {225, 138, 50, 255};
+static const Clay_Color COLOR_BLUE      = (Clay_Color) {111, 173, 162, 255};
+static const Clay_Color COLOR_LIGHT     = (Clay_Color) {224, 215, 210, 255};
+static const Clay_Color COLOR_BLACK     = (Clay_Color) {0, 0, 0, 255};
 
-const Clay_LayoutConfig ChildWindow = (Clay_LayoutConfig) {
-    .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0)},
-    .padding = { 16, 16, 16, 16},
-    .childGap = 16,
-    .childAlignment =  { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER },
-    .layoutDirection = CLAY_LEFT_TO_RIGHT
-};
+// typedef struct app_state {
+//     SDL_Window *window;
+//     Clay_SDL3RendererData rendererData;
+// } AppState;
+
+// static inline Clay_Dimensions SDL_MeasureText(Clay_StringSlice text, Clay_TextElementConfig *config, void *userData)
+// {
+//     TTF_Font **fonts = userData;
+//     TTF_Font *font = fonts[config->fontId];
+//     int width, height;
+
+//     TTF_SetFontSize(font, config->fontSize);
+//     if (!TTF_GetStringSize(font, text.chars, text.length, &width, &height)) {
+//         SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Failed to measure text: %s", SDL_GetError());
+//     }
+
+//     return (Clay_Dimensions) { (float) width, (float) height };
+// }
+
+void HandleClayErrors(Clay_ErrorData errorData) {
+    printf("%s", errorData.errorText.chars);
+}
 
 Clay_RenderCommandArray ClayRedBackgroundLayout(void)
 {
@@ -48,40 +59,32 @@ Clay_RenderCommandArray ClayRedBackgroundLayout(void)
     };
 
     // Define one element that covers the whole screen
-    CLAY(CLAY_ID("OuterContainer"), {
-        ParentWindow,
-        .backgroundColor = { 50, 50, 50, 255 }
-    }) {/* Center container start */
-        CLAY(CLAY_ID("CenterContainer"), {
-        ChildWindow,
-        .cornerRadius = CLAY_CORNER_RADIUS(25),
-        .backgroundColor = { 100, 100, 100, 255 }
-        }) {/* Build button start */
-            CLAY(CLAY_ID("BuildButton"), {
-            .layout = { .padding = { 16, 16, 8, 8 }},
-            .backgroundColor = {85, 255, 85, 255 },
-            .cornerRadius = CLAY_CORNER_RADIUS(15)
-            }) {
-                CLAY_TEXT(CLAY_STRING("Build Encounter"), CLAY_TEXT_CONFIG({
-                    .fontId = FONT_ID_BODY_16,
-                    .fontSize = 16,
-                    .textColor = { 0, 0, 0, 255}
-                }));
-            }/* Build button end */ 
-        }
-        {/* Build button start */
-            CLAY(CLAY_ID("StartButton"), {
-            .layout = { .padding = { 16, 16, 8, 8 }},
-            .backgroundColor = {85, 255, 85, 255 },
-            .cornerRadius = CLAY_CORNER_RADIUS(15)
-            }) {
-                CLAY_TEXT(CLAY_STRING("Start Encounter"), CLAY_TEXT_CONFIG({
-                    .fontId = FONT_ID_BODY_16,
-                    .fontSize = 16,
-                    .textColor = { 0, 0, 0, 255}
-                }));
-            }/* Build button end */ 
-        };        
+    CLAY(CLAY_ID("OuterContainer"), { ParentWindow, .backgroundColor = COLOR_WHITE}) {
+
+        /* Center container start */
+        CLAY(CLAY_ID("HeadLabelContainer"), { HeadLabelWindow,.cornerRadius = CLAY_CORNER_RADIUS(10), .backgroundColor = COLOR_WHITE}) {
+            CLAY_TEXT(CLAY_STRING("GUIDNBATTER"), CLAY_TEXT_CONFIG(WindowLabel));
+        };
+        /* Start button start */
+        CLAY(CLAY_ID("StartButton"), ButtonStyle) {
+            CLAY_TEXT(CLAY_STRING("Start Encounter"), CLAY_TEXT_CONFIG(ButtonLabel));
+        };
+
+        /* Build button start */
+        CLAY(CLAY_ID("BuildButton"), ButtonStyle) {
+            CLAY_TEXT(CLAY_STRING("Build Encounter"), CLAY_TEXT_CONFIG(ButtonLabel)); 
+        };
+
+        /* Creature button start */
+        CLAY(CLAY_ID("CreatureDatabaseButton"), ButtonStyle) {
+            CLAY_TEXT(CLAY_STRING("Creature Database"), CLAY_TEXT_CONFIG(ButtonLabel));
+        };
+
+        /* Player button start */ 
+        CLAY(CLAY_ID("PlayerDatabaseButton"), ButtonStyle) {
+            CLAY_TEXT(CLAY_STRING("Player Database"), CLAY_TEXT_CONFIG(ButtonLabel));
+            
+        };
     };
 
     return Clay_EndLayout();
