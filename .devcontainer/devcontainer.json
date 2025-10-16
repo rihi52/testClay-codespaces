@@ -1,10 +1,10 @@
-// {
-//   "name": "Clay WebAssembly UI",
-//   "image": "emscripten/emsdk",
-//   "forwardPorts": [8080],
-//   "customizations": {
-//     "vscode": {
-//       "extensions": ["ms-vscode.cpptools"]
-//     }
-//   }
-// }
+{
+  "name": "Clay WebAssembly UI",
+  "image": "emscripten/emsdk",
+  "forwardPorts": [8080],
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-vscode.cpptools"]
+    }
+  }
+}
