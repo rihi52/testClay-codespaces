@@ -85,6 +85,11 @@ Clay_RenderCommandArray ClayRedBackgroundLayout(void)
             CLAY_TEXT(CLAY_STRING("Player Database"), CLAY_TEXT_CONFIG(ButtonLabel));
             
         };
+
+        /* Creature button start */
+        CLAY(CLAY_ID("button"), {MainButton, .backgroundColor = Clay_Hovered() ? COLOR_BLUE : COLOR_ORANGE }) {
+            CLAY_TEXT(CLAY_STRING("test"), CLAY_TEXT_CONFIG(ButtonLabel));
+        };
     };
 
     return Clay_EndLayout();
