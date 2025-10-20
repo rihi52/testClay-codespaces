@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "sdl_ttf.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "sdl_events.h": "c"
     }
 }

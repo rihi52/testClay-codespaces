@@ -1,5 +1,32 @@
+#ifndef GLOBAL_H
+#define GLOBAL_H
+
+#include "clay.h"
+#include "stdio.h"
+#include "stdint.h"
+
 #define MAIN_SCREEN 0
 #define START_ENCOUNTER_SCREEN  1
 #define BUILD_ENCOUNTER_SCREEN  2
 #define CREATURE_DB_SCREEN      3
 #define PLAYER_DB_SCREEN        4
+
+#define MAX_TEXT 256
+extern char TextBuffer[MAX_TEXT];
+
+//char textBuffer[MAX_TEXT] = {0};
+
+extern int WindowState;
+
+extern const int FONT_ID_BODY_16;
+extern const int FONT_ID_BODY_32;
+
+extern const Clay_Color COLOR_ORANGE;
+extern const Clay_Color COLOR_BLUE;
+extern const Clay_Color COLOR_LIGHT;
+extern const Clay_Color COLOR_BLACK;
+extern const Clay_Color COLOR_RED;
+extern const Clay_Color COLOR_GREEN;
+extern const Clay_Color COLOR_WHITE;
+
+#endif /* GLOBAL_H */

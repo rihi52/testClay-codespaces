@@ -16,6 +16,9 @@ emmake make
 
 # Flag for a release build
 emcmake cmake .. -DCMAKE_BUILD_TYPE=Release
+
+# Maybe without cmake??
+emcc -sUSE_SDL=3 -lSDL3_TTF ../src/global.c ../src/main_window.c ../src/main.c ../src/styles.c -o hello.html
 ```
 
 ``` bash
