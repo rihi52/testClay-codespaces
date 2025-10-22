@@ -18,7 +18,7 @@ static void BuildEncounterButtonCallback(Clay_ElementId elementId, Clay_PointerD
 static void CreatureDatabaseButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, intptr_t userData);
 static void PlayerDatabaseButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, intptr_t userData);
 
-void CreatureDatabaseWindow(void);
+void CreatureDatabaseWindow(AppState * state);
 void PlayerDatabaseWindow(void);
 
 /*========================================================================* 
@@ -26,7 +26,7 @@ void PlayerDatabaseWindow(void);
  *========================================================================* 
  */
 
-Clay_RenderCommandArray MainWindow(void)
+Clay_RenderCommandArray MainWindow(AppState * state)
 {
     Clay_BeginLayout();
 
@@ -85,7 +85,7 @@ Clay_RenderCommandArray MainWindow(void)
             break;
         
         case CREATURE_DB_SCREEN:
-            CreatureDatabaseWindow();
+            CreatureDatabaseWindow(state);
             break;
 
         case PLAYER_DB_SCREEN:
@@ -100,31 +100,46 @@ Clay_RenderCommandArray MainWindow(void)
     return Clay_EndLayout();
 }
 
-void CreatureDatabaseWindow(void) {
+void CreatureDatabaseWindow(AppState * state) {
+    /* Creature database window*/
     CLAY(CLAY_ID("CreatureDBOuterContainer"), { LTRParentWindow, .backgroundColor = COLOR_WHITE}) {
+        
+        /* Sidebar for option buttons */
         CLAY(CLAY_ID("CreatureDBSidebar"), SidebarWindowStyle) {
-            CLAY(CLAY_ID("CreatureDBHomeButton"), MainButtonStyle) {
-                Clay_OnHover(ReturnToMainScreenCallback, (intptr_t)WindowState);
-                CLAY_TEXT(CLAY_STRING("Return Home"), CLAY_TEXT_CONFIG(ButtonLabelTextConfig));
-            };
-            CLAY(CLAY_ID("CreatureDBAddButton"), MainButtonStyle) {
-                CLAY_TEXT(CLAY_STRING("Add"), CLAY_TEXT_CONFIG(ButtonLabelTextConfig));
-            };
-            CLAY(CLAY_ID("CreatureDBRemoveButton"), MainButtonStyle) {
-                CLAY_TEXT(CLAY_STRING("Remove"), CLAY_TEXT_CONFIG(ButtonLabelTextConfig));
-            };
-            CLAY(CLAY_ID("CreatureDBEditButton"), MainButtonStyle) {
-                CLAY_TEXT(CLAY_STRING("Edit"), CLAY_TEXT_CONFIG(ButtonLabelTextConfig));
+            Clay_ElementData ParentSidebar = Clay_GetElementData(CLAY_ID("CreatureDBSidebar"));
+            
+            CLAY(CLAY_ID("SidebarTop"), {.layout = {.sizing = CLAY_SIZING_GROW(0), CLAY_SIZING_FIXED(ParentSidebar.boundingBox.width)}}){
+                CLAY(CLAY_ID("CreatureDBHomeButton"), MainButtonStyle) {
+                    Clay_OnHover(ReturnToMainScreenCallback, (intptr_t)WindowState);
+                    CLAY_TEXT(CLAY_STRING("Return Home"), CLAY_TEXT_CONFIG(ButtonLabelTextConfig));
+                };
+                CLAY(CLAY_ID("CreatureDBAddButton"), MainButtonStyle) {
+                    CLAY_TEXT(CLAY_STRING("Add"), CLAY_TEXT_CONFIG(ButtonLabelTextConfig));
+                };
+                CLAY(CLAY_ID("CreatureDBRemoveButton"), MainButtonStyle) {
+                    CLAY_TEXT(CLAY_STRING("Remove"), CLAY_TEXT_CONFIG(ButtonLabelTextConfig));
+                };
+                CLAY(CLAY_ID("CreatureDBEditButton"), MainButtonStyle) {
+                    CLAY_TEXT(CLAY_STRING("Edit"), CLAY_TEXT_CONFIG(ButtonLabelTextConfig));
+                };
             };
         };
+
+        /* Main content containing monster lists and stats*/
         CLAY(CLAY_ID("CreatureDBContentWindow"), ContentWindowStyle){
             CLAY(CLAY_ID("CreatureDBHeader"), { HeadLabelWindow,.cornerRadius = CLAY_CORNER_RADIUS(10), .backgroundColor = COLOR_RED}) {
                 CLAY_TEXT(CLAY_STRING("Creature DB"), CLAY_TEXT_CONFIG(WindowLabelText));
             };
-            CLAY(CLAY_ID("TextBox"), {.layout = {.sizing = {CLAY_SIZING_FIXED(500), CLAY_SIZING_FIXED(100)}}, .backgroundColor = COLOR_WHITE}){
-                
-            };
-            
+            CLAY(CLAY_ID("TextBox"), {SingleLineTextContainer, .backgroundColor = COLOR_WHITE}){
+
+                /* Create char* and set equal to the overall buffer that reads keyboard input */
+                char * SearchText = &TextBuffer[0];
+                /* Custom clay_string to allow for a dynamically changing char* */
+                Clay_String SomeTextMaybe = {.isStaticallyAllocated = true, .length = SDL_strlen(SearchText), .chars = SearchText};
+                /* Using dynamically changing char * SearchText */
+                CLAY_TEXT(SomeTextMaybe, CLAY_TEXT_CONFIG(InputTextTextConfig));
+                             
+            };            
         }
     }
 }
@@ -146,6 +161,7 @@ void PlayerDatabaseWindow(void) {
 static void ReturnToMainScreenCallback(Clay_ElementId elementId, Clay_PointerData pointerData, intptr_t userData) {
     int check = (int) userData;
     if (pointerData.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME) {
+        SDL_memset(TextBuffer, 0, sizeof(TextBuffer));
         WindowState = MAIN_SCREEN;
     }
 }

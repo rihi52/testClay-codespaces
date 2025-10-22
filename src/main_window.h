@@ -5,6 +5,6 @@
 #include "global.h"
 
 
-Clay_RenderCommandArray MainWindow(void);
+Clay_RenderCommandArray MainWindow(AppState * state);
 
 #endif /* MAIN_WINDOW_H */

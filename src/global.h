@@ -1,9 +1,17 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
+#define SDL_MAIN_HANDLED
+
 #include "clay.h"
 #include "stdio.h"
 #include "stdint.h"
+#include <SDL3/SDL.h>
+#include <SDL3/SDL_main.h>
+#include <SDL3_ttf/SDL_ttf.h>
+#include <SDL3_image/SDL_image.h>
+#include <SDL3/SDL_keyboard.h>
+#include <SDL3/SDL_events.h>
 
 #define MAIN_SCREEN 0
 #define START_ENCOUNTER_SCREEN  1
@@ -28,5 +36,16 @@ extern const Clay_Color COLOR_BLACK;
 extern const Clay_Color COLOR_RED;
 extern const Clay_Color COLOR_GREEN;
 extern const Clay_Color COLOR_WHITE;
+
+typedef struct {
+    SDL_Renderer *renderer;
+    TTF_TextEngine *textEngine;
+    TTF_Font **fonts;
+} Clay_SDL3RendererData;
+
+typedef struct app_state {
+    SDL_Window *window;
+    Clay_SDL3RendererData rendererData;
+} AppState;
 
 #endif /* GLOBAL_H */

@@ -1,3 +1,4 @@
+
 #define SDL_MAIN_USE_CALLBACKS
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
@@ -22,10 +23,6 @@ const int MinimumWidth = 1280;
 const int MinimumHeight = 720;
 
 const Uint32 FONT_ID = 0;
-typedef struct app_state {
-    SDL_Window *window;
-    Clay_SDL3RendererData rendererData;
-} AppState;
 
 static inline Clay_Dimensions SDL_MeasureText(Clay_StringSlice text, Clay_TextElementConfig *config, void *userData)
 {
@@ -166,7 +163,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
 {
     AppState *state = appstate;
 
-    Clay_RenderCommandArray render_commands = MainWindow();
+    Clay_RenderCommandArray render_commands = MainWindow(state);
 
     SDL_SetRenderDrawColor(state->rendererData.renderer, 0, 0, 0, 255);
     SDL_RenderClear(state->rendererData.renderer);

@@ -18,11 +18,15 @@ extern const Clay_ElementDeclaration ContentWindowStyle;
 
 extern const Clay_LayoutConfig HeadLabelWindow;
 
+extern const Clay_LayoutConfig SingleLineTextContainer;
+
 extern const Clay_LayoutConfig MainButton;
 
 extern const Clay_TextElementConfig WindowLabelText;
 
 extern const Clay_TextElementConfig ButtonLabelTextConfig;
+
+extern const Clay_TextElementConfig InputTextTextConfig;
 
 extern const Clay_ElementDeclaration MainButtonStyle;
 

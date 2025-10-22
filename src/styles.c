@@ -5,7 +5,7 @@
 /* Parent windows */
 const Clay_LayoutConfig TTBParentWindow = (Clay_LayoutConfig) {
     .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0)},
-    .padding = { 16, 16, 16, 16},
+    .padding = { 8, 8, 8, 8},
     .childGap = 40,
     .childAlignment =  {  CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER },
     .layoutDirection = CLAY_TOP_TO_BOTTOM
@@ -23,8 +23,8 @@ const Clay_LayoutConfig LTRParentWindow = (Clay_LayoutConfig) {
 
 const Clay_LayoutConfig SidebarWindow = (Clay_LayoutConfig) {
     .sizing = { CLAY_SIZING_FIXED(250), CLAY_SIZING_GROW(0)},
-    .padding = { 16, 16, 16, 16},
-    .childGap = 16,
+    .padding = { 8, 8, 8, 8},
+    .childGap = 0,
     .childAlignment =  {  CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_TOP },
     .layoutDirection = CLAY_TOP_TO_BOTTOM
 };
@@ -41,7 +41,7 @@ const Clay_LayoutConfig ContentWindow = (Clay_LayoutConfig) {
     .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0)},
     .padding = { 16, 16, 16, 16},
     .childGap = 40,
-    .childAlignment =  {  CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER },
+    .childAlignment =  {  CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_TOP },
     .layoutDirection = CLAY_TOP_TO_BOTTOM
 };
 
@@ -56,6 +56,14 @@ const Clay_LayoutConfig HeadLabelWindow = (Clay_LayoutConfig) {
     .padding = { 8, 8, 8, 8 },
     .childGap = 16,
     .childAlignment =  { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER },
+    .layoutDirection = CLAY_TOP_TO_BOTTOM
+};
+
+const Clay_LayoutConfig SingleLineTextContainer = (Clay_LayoutConfig) {
+    .sizing = { CLAY_SIZING_FIXED(214), CLAY_SIZING_FIXED(32) },
+    .padding = { 8, 8, 8, 8 },
+    .childGap = 16,
+    .childAlignment =  { CLAY_ALIGN_X_LEFT, CLAY_ALIGN_Y_CENTER },
     .layoutDirection = CLAY_TOP_TO_BOTTOM
 };
 
@@ -74,7 +82,15 @@ const Clay_TextElementConfig ButtonLabelTextConfig = (Clay_TextElementConfig) {
     .fontId = 0,
     .fontSize = 16,
     .textAlignment = CLAY_TEXT_ALIGN_CENTER,
-    .wrapMode = CLAY_TEXT_WRAP_NONE
+    .wrapMode = CLAY_TEXT_WRAP_WORDS
+};
+
+const Clay_TextElementConfig InputTextTextConfig = (Clay_TextElementConfig) {
+    .textColor = { 0, 0, 0, 255},
+    .fontId = 0,
+    .fontSize = 16,
+    .textAlignment = CLAY_TEXT_ALIGN_CENTER,
+    .wrapMode = CLAY_TEXT_WRAP_WORDS
 };
 
 const Clay_ElementDeclaration MainButtonStyle = (Clay_ElementDeclaration) {
@@ -92,4 +108,3 @@ const Clay_TextElementConfig WindowLabelText = (Clay_TextElementConfig) {
     .textAlignment = CLAY_TEXT_ALIGN_CENTER,
     .wrapMode = CLAY_TEXT_WRAP_NONE
 };
-

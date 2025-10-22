@@ -1,6 +1,4 @@
 build/
-build_web/
 emsdk/
 myClayoutTesting/
 build_os/
-vendored/
