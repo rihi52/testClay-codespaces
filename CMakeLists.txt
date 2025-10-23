@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(hello C)
+project(guidnbatter C)
 
 # ------------------------------
 # Output directories
@@ -41,7 +41,7 @@ if(EMSCRIPTEN)
     set(CMAKE_EXECUTABLE_SUFFIX ".html" CACHE INTERNAL "")
 
     # Your game executable
-    add_executable(hello
+    add_executable(guidnbatter
         src/global.c
         src/main_window.c
         src/main.c
@@ -49,19 +49,19 @@ if(EMSCRIPTEN)
     )
 
     # Link SDL libraries
-    target_link_libraries(hello PRIVATE
+    target_link_libraries(guidnbatter PRIVATE
         SDL3::SDL3
         SDL3_image::SDL3_image
         SDL3_ttf::SDL3_ttf
     )
 
     # Preload resources folder so fonts/images work in browser
-    set_target_properties(hello PROPERTIES
+    set_target_properties(guidnbatter PROPERTIES
         LINK_FLAGS "--preload-file ${CMAKE_SOURCE_DIR}/resources@/resources"
     )
 
     # Optional: additional Emscripten settings
-    target_link_options(hello PRIVATE
+    target_link_options(guidnbatter PRIVATE
         "-sALLOW_MEMORY_GROWTH"
         "-sMAX_WEBGL_VERSION=2"
     )
@@ -69,14 +69,14 @@ else()
     # ------------------------------
     # Native target (Linux)
     # ------------------------------
-    add_executable(hello
+    add_executable(guidnbatter
         src/global.c
         src/main_window.c
         src/main.c
         src/styles.c
     )
 
-    target_link_libraries(hello PRIVATE
+    target_link_libraries(guidnbatter PRIVATE
         SDL3::SDL3
         SDL3_image::SDL3_image
         SDL3_ttf::SDL3_ttf
@@ -84,7 +84,7 @@ else()
         ${HARFBUZZ_LIBRARIES}
     )
 
-    target_include_directories(hello PRIVATE
+    target_include_directories(guidnbatter PRIVATE
         ${FREETYPE_INCLUDE_DIRS}
         ${HARFBUZZ_INCLUDE_DIRS}
     )

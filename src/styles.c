@@ -98,9 +98,9 @@ Clay_ElementDeclaration MakeSidebarStyle(uint16_t width, uint16_t height, uint16
     };
 }
 
-/* This function returns a Clay_ElementDeclaration struct used for styling a Sidebar
+/* This function returns a Clay_ElementDeclaration struct used for styling a Button
  * It assumes CLAY_SIZING_FIXED(width), CLAY_SIZING_FIXED(height), CLAY_ALING_X_CENTER, CLAY_ALIGN_Y_CENTER, and CLAY_TOP_TO_BOTTOM */
-Clay_ElementDeclaration MakeButtonStyle(uint16_t width, uint16_t height, uint16_t padding, uint16_t childGap, Clay_Color COLOR) {
+Clay_ElementDeclaration FixedContainerTTBStyle(uint16_t width, uint16_t height, uint16_t padding, uint16_t childGap, Clay_Color COLOR) {
 
     Clay_LayoutConfig ContentWindowConfig = {
     .sizing = { CLAY_SIZING_FIXED(width), CLAY_SIZING_FIXED(height) },
@@ -117,51 +117,57 @@ Clay_ElementDeclaration MakeButtonStyle(uint16_t width, uint16_t height, uint16_
     };
 }
 
+/* This function returns a Clay_ElementDeclaration struct used for styling a Sidebar
+ * It assumes CLAY_SIZING_FIXED(width), CLAY_SIZING_FIXED(height), CLAY_ALING_X_CENTER, CLAY_ALIGN_Y_CENTER, and CLAY_TOP_TO_BOTTOM */
+Clay_TextElementConfig TextConfig(Clay_Color COLOR, uint16_t fontId, uint16_t fontSize, uint16_t textAlignment, uint16_t wrapMode) {
+
+    return (Clay_TextElementConfig) {
+        .textColor = COLOR_WHITE,
+        .fontId = fontId,
+        .fontSize = fontSize,
+        .textAlignment = textAlignment,
+        .wrapMode = wrapMode
+    };
+}
+
+/* This function returns a Clay_ElementDeclaration struct used for styling a single line text container
+ * It assumes CLAY_SIZING_FIXED(width), CLAY_SIZING_FIXED(height), CLAY_ALIGN_X_LEFT, CLAY_ALIGN_Y_CENTER, and CLAY_TOP_TO_BOTTOM */
+Clay_ElementDeclaration SingleLineTextContainerStyle(uint16_t width, uint16_t height, uint16_t padding, uint16_t childGap, Clay_Color COLOR, uint16_t cornerRadius, uint16_t borderWidthAll, Clay_Color BORDER_COLOR) {
+
+    Clay_LayoutConfig SingleLineTextContainerLayout = {
+    .sizing = { CLAY_SIZING_FIXED(width), CLAY_SIZING_FIXED(height) },
+    .padding = { padding, padding, padding, padding},
+    .childGap = childGap,
+    .childAlignment =  { CLAY_ALIGN_X_LEFT, CLAY_ALIGN_Y_CENTER },
+    .layoutDirection = CLAY_TOP_TO_BOTTOM
+    };
+
+    return (Clay_ElementDeclaration) {
+        .layout = SingleLineTextContainerLayout,
+        .backgroundColor = COLOR,
+        .cornerRadius = CLAY_CORNER_RADIUS(cornerRadius),
+        .border = {
+            .width = {
+                .left   = borderWidthAll,
+                .right  = borderWidthAll,
+                .top    = borderWidthAll,
+                .bottom = borderWidthAll
+            },
+            .color = BORDER_COLOR
+        }
+    };
+}
+
 /*========================================================================* 
  *  SECTION - Constant Styles
  *========================================================================* 
  */
 
+ // TEMP
 const Clay_LayoutConfig HeadLabelWindow = (Clay_LayoutConfig) {
     .sizing = { CLAY_SIZING_FIXED(500), CLAY_SIZING_FIXED(100) },
     .padding = { 8, 8, 8, 8 },
     .childGap = 16,
     .childAlignment =  { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER },
     .layoutDirection = CLAY_TOP_TO_BOTTOM
-};
-
-const Clay_LayoutConfig SingleLineTextContainer = (Clay_LayoutConfig) {
-    .sizing = { CLAY_SIZING_FIXED(214), CLAY_SIZING_FIXED(32) },
-    .padding = { 8, 8, 8, 8 },
-    .childGap = 16,
-    .childAlignment =  { CLAY_ALIGN_X_LEFT, CLAY_ALIGN_Y_CENTER },
-    .layoutDirection = CLAY_TOP_TO_BOTTOM
-};
-
-/* Buttons */
-
-const Clay_TextElementConfig ButtonLabelTextConfig = (Clay_TextElementConfig) {
-    .textColor = COLOR_WHITE,
-    .fontId = 0,
-    .fontSize = 16,
-    .textAlignment = CLAY_TEXT_ALIGN_CENTER,
-    .wrapMode = CLAY_TEXT_WRAP_WORDS
-};
-
-const Clay_TextElementConfig InputTextTextConfig = (Clay_TextElementConfig) {
-    .textColor = COLOR_WHITE,
-    .fontId = 0,
-    .fontSize = 16,
-    .textAlignment = CLAY_TEXT_ALIGN_CENTER,
-    .wrapMode = CLAY_TEXT_WRAP_WORDS
-};
-
-/* Text */
-
-const Clay_TextElementConfig WindowLabelText = (Clay_TextElementConfig) {
-    .textColor = COLOR_WHITE,
-    .fontId = 0,
-    .fontSize = 64,
-    .textAlignment = CLAY_TEXT_ALIGN_CENTER,
-    .wrapMode = CLAY_TEXT_WRAP_NONE
 };

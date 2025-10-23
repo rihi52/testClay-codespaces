@@ -10,7 +10,9 @@ Clay_ElementDeclaration MakeSidebarWindow(uint16_t width, uint16_t height, uint1
 Clay_ElementDeclaration MakeParentWindowStyle(uint16_t padding, uint16_t childGap, uint16_t layoutDirection, Clay_Color COLOR);
 Clay_ElementDeclaration MakeContentWindowStyle(uint16_t padding, uint16_t childGap, uint16_t yAlign, uint16_t layoutDirection, Clay_Color COLOR);
 Clay_ElementDeclaration MakeSidebarStyle(uint16_t width, uint16_t height, uint16_t padding, uint16_t childGap, uint16_t yAlign, uint16_t layoutDirection, Clay_Color COLOR);
-Clay_ElementDeclaration MakeButtonStyle(uint16_t width, uint16_t height, uint16_t padding, uint16_t childGap, Clay_Color COLOR);
+Clay_ElementDeclaration FixedContainerTTBStyle(uint16_t width, uint16_t height, uint16_t padding, uint16_t childGap, Clay_Color COLOR);
+Clay_TextElementConfig TextConfig(Clay_Color COLOR, uint16_t fontId, uint16_t fontSize, uint16_t textAlignment, uint16_t wrapMode);
+Clay_ElementDeclaration SingleLineTextContainerStyle(uint16_t width, uint16_t height, uint16_t padding, uint16_t childGap, Clay_Color COLOR, uint16_t cornerRadius, uint16_t borderWidthAll, Clay_Color BORDER_COLOR);
 
 /* Colors */
 extern const Clay_Color COLOR_ORANGE;
@@ -25,14 +27,7 @@ extern const Clay_Color COLOR_BUTTON_GRAY;
 
 /* Styles */
 
+// TEMP
 extern const Clay_LayoutConfig HeadLabelWindow;
-
-extern const Clay_LayoutConfig SingleLineTextContainer;
-
-extern const Clay_TextElementConfig WindowLabelText;
-
-extern const Clay_TextElementConfig ButtonLabelTextConfig;
-
-extern const Clay_TextElementConfig InputTextTextConfig;
 
 #endif /* STYLES_H */
