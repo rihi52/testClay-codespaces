@@ -7,28 +7,42 @@
 
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_keyboard.h>
-
 /*========================================================================* 
  *  SECTION - Local prototypes
  *========================================================================* 
  */
+void StylesInit(void);
+
 static void ReturnToMainScreenCallback(Clay_ElementId elementId, Clay_PointerData pointerData, intptr_t userData);
 static void StartEncounterButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, intptr_t userData);
 static void BuildEncounterButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, intptr_t userData);
 static void CreatureDatabaseButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, intptr_t userData);
 static void PlayerDatabaseButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, intptr_t userData);
 
+void BuildEncounterWindow(AppState * state);
 void CreatureDatabaseWindow(AppState * state);
-void PlayerDatabaseWindow(void);
+void PlayerDatabaseWindow(AppState * state);
 
 /*========================================================================* 
- *  SECTION - Layouts 
+ *  SECTION - Style declarations
  *========================================================================* 
  */
+static Clay_ElementDeclaration SidebarTopPartWindowStyle;
+static Clay_ElementDeclaration SidebarBottomPartWindowStyle;
+static Clay_ElementDeclaration TTBParentWindowStyle;
+static Clay_ElementDeclaration LTRParentWindowStyle;
+static Clay_ElementDeclaration ContentWindowStyle;
+static Clay_ElementDeclaration SidebarWindowStyle;
+static Clay_ElementDeclaration MainButtonStyle;
 
+/*========================================================================* 
+ *  SECTION - Global Functions 
+ *========================================================================* 
+ */
 Clay_RenderCommandArray MainWindow(AppState * state)
 {
     Clay_BeginLayout();
+    StylesInit();
 
     Clay_Sizing layoutExpand = {
     .width = CLAY_SIZING_GROW(0),
@@ -36,12 +50,12 @@ Clay_RenderCommandArray MainWindow(AppState * state)
     };
 
     // Define one element that covers the whole screen
-    CLAY(CLAY_ID("OuterContainer"), { TTBParentWindow, .backgroundColor = COLOR_WHITE}) {
+    CLAY(CLAY_ID("OuterContainer"), TTBParentWindowStyle) {
 
         switch (WindowState){
             case 0:
             /* Center container start */
-            CLAY(CLAY_ID("HeadLabelContainer"), { HeadLabelWindow,.cornerRadius = CLAY_CORNER_RADIUS(10), .backgroundColor = COLOR_WHITE}) {
+            CLAY(CLAY_ID("HeadLabelContainer"), { HeadLabelWindow,.cornerRadius = CLAY_CORNER_RADIUS(10), .backgroundColor = COLOR_BLACK}) {
                 CLAY_TEXT(CLAY_STRING("GUIDNBATTER"), CLAY_TEXT_CONFIG(WindowLabelText));
             };
             /* Start button start */
@@ -89,7 +103,7 @@ Clay_RenderCommandArray MainWindow(AppState * state)
             break;
 
         case PLAYER_DB_SCREEN:
-            PlayerDatabaseWindow();            
+            PlayerDatabaseWindow(state);            
             break;
 
         default:
@@ -100,15 +114,34 @@ Clay_RenderCommandArray MainWindow(AppState * state)
     return Clay_EndLayout();
 }
 
+/*========================================================================* 
+ *  SECTION - Local Functions 
+ *========================================================================* 
+ */
+void StylesInit(void) {    
+    TTBParentWindowStyle = MakeParentWindowStyle(8, 40, CLAY_TOP_TO_BOTTOM, COLOR_BLACK);
+    LTRParentWindowStyle = MakeParentWindowStyle(0, 8, CLAY_LEFT_TO_RIGHT, COLOR_BLACK);
+    SidebarTopPartWindowStyle = MakeSidebarWindow(SIDEBAR_WIDTH_PX, WindowHeight/2, 8, 16, CLAY_ALIGN_Y_TOP, CLAY_TOP_TO_BOTTOM);
+    SidebarBottomPartWindowStyle = MakeSidebarWindow(SIDEBAR_WIDTH_PX, WindowHeight/2, 8, 16, CLAY_ALIGN_Y_BOTTOM, CLAY_TOP_TO_BOTTOM);
+    ContentWindowStyle = MakeContentWindowStyle(16, 40, CLAY_ALIGN_Y_TOP, CLAY_TOP_TO_BOTTOM, COLOR_GRAY_BG);
+    SidebarWindowStyle = MakeSidebarStyle(SIDEBAR_WIDTH_PX, WindowHeight, 0, 0, CLAY_ALIGN_Y_CENTER, CLAY_TOP_TO_BOTTOM, COLOR_GRAY_BG);
+    MainButtonStyle = MakeButtonStyle(200, 50, 8, 16, COLOR_BUTTON_GRAY);
+}
+
+void BuildEncounterWindow(AppState * state) {
+
+}
+
 void CreatureDatabaseWindow(AppState * state) {
     /* Creature database window*/
-    CLAY(CLAY_ID("CreatureDBOuterContainer"), { LTRParentWindow, .backgroundColor = COLOR_WHITE}) {
-        
+    
+    CLAY(CLAY_ID("CreatureDBOuterContainer"), LTRParentWindowStyle) {
+
         /* Sidebar for option buttons */
         CLAY(CLAY_ID("CreatureDBSidebar"), SidebarWindowStyle) {
-            Clay_ElementData ParentSidebar = Clay_GetElementData(CLAY_ID("CreatureDBSidebar"));
             
-            CLAY(CLAY_ID("SidebarTop"), {.layout = {.sizing = CLAY_SIZING_GROW(0), CLAY_SIZING_FIXED(ParentSidebar.boundingBox.width)}}){
+            CLAY(CLAY_ID("SidebarTop"), SidebarTopPartWindowStyle) {
+
                 CLAY(CLAY_ID("CreatureDBHomeButton"), MainButtonStyle) {
                     Clay_OnHover(ReturnToMainScreenCallback, (intptr_t)WindowState);
                     CLAY_TEXT(CLAY_STRING("Return Home"), CLAY_TEXT_CONFIG(ButtonLabelTextConfig));
@@ -123,35 +156,83 @@ void CreatureDatabaseWindow(AppState * state) {
                     CLAY_TEXT(CLAY_STRING("Edit"), CLAY_TEXT_CONFIG(ButtonLabelTextConfig));
                 };
             };
+            
+            CLAY(CLAY_ID("SidebarBottom"), SidebarBottomPartWindowStyle ) {
+                CLAY(CLAY_ID("CreatureTextBox"), {SingleLineTextContainer, .backgroundColor = COLOR_GRAY_BG, .cornerRadius = CLAY_CORNER_RADIUS(5), .border = {.width = {.left = 2, .right = 2, .top = 2, .bottom = 2}, .color = COLOR_WHITE }}){
+
+                    /* Create char* and set equal to the overall buffer that reads keyboard input */
+                    char * SearchText = &TextBuffer[0];
+                    /* Custom clay_string to allow for a dynamically changing char* */
+                    Clay_String SomeTextMaybe = {.isStaticallyAllocated = true, .length = SDL_strlen(SearchText), .chars = SearchText};
+                    /* Using dynamically changing char * SearchText */
+                    CLAY_TEXT(SomeTextMaybe, CLAY_TEXT_CONFIG(InputTextTextConfig));
+                };
+
+                CLAY(CLAY_ID("CreatureDBSearchButton"), MainButtonStyle) {
+                    // Clay_OnHover(ReturnToMainScreenCallback, (intptr_t)WindowState); TODO: Fill this in with a sql search function
+                    CLAY_TEXT(CLAY_STRING("Search"), CLAY_TEXT_CONFIG(ButtonLabelTextConfig));
+                };                
+            };
         };
 
         /* Main content containing monster lists and stats*/
         CLAY(CLAY_ID("CreatureDBContentWindow"), ContentWindowStyle){
             CLAY(CLAY_ID("CreatureDBHeader"), { HeadLabelWindow,.cornerRadius = CLAY_CORNER_RADIUS(10), .backgroundColor = COLOR_RED}) {
                 CLAY_TEXT(CLAY_STRING("Creature DB"), CLAY_TEXT_CONFIG(WindowLabelText));
-            };
-            CLAY(CLAY_ID("TextBox"), {SingleLineTextContainer, .backgroundColor = COLOR_WHITE}){
-
-                /* Create char* and set equal to the overall buffer that reads keyboard input */
-                char * SearchText = &TextBuffer[0];
-                /* Custom clay_string to allow for a dynamically changing char* */
-                Clay_String SomeTextMaybe = {.isStaticallyAllocated = true, .length = SDL_strlen(SearchText), .chars = SearchText};
-                /* Using dynamically changing char * SearchText */
-                CLAY_TEXT(SomeTextMaybe, CLAY_TEXT_CONFIG(InputTextTextConfig));
-                             
-            };            
-        }
-    }
+            };           
+        };
+    };
 }
 
-void PlayerDatabaseWindow(void) {
-    CLAY(CLAY_ID("PlayerDBOuterContainer"), { LTRParentWindow, .backgroundColor = COLOR_WHITE}) {
-        CLAY(CLAY_ID("CreatureDBLeftPane"), {SidebarWindow, .backgroundColor = COLOR_BLUE});
-        CLAY(CLAY_ID("PlayerDBHeader"), { HeadLabelWindow,.cornerRadius = CLAY_CORNER_RADIUS(10), .backgroundColor = COLOR_GREEN}) {
-            CLAY_TEXT(CLAY_STRING("Player DB"), CLAY_TEXT_CONFIG(WindowLabelText));
-            Clay_OnHover(ReturnToMainScreenCallback, (intptr_t)WindowState);
+void PlayerDatabaseWindow(AppState * state) {
+    /* Player database window*/
+    CLAY(CLAY_ID("PlayerDBOuterContainer"), LTRParentWindowStyle ) {
+        
+        /* Sidebar for option buttons */
+        CLAY(CLAY_ID("PlayerDBSidebar"), SidebarWindowStyle) {
+            
+            CLAY(CLAY_ID("SidebarTop"), SidebarTopPartWindowStyle) {
+
+                CLAY(CLAY_ID("PlayerDBHomeButton"), MainButtonStyle) {
+                    Clay_OnHover(ReturnToMainScreenCallback, (intptr_t)WindowState);
+                    CLAY_TEXT(CLAY_STRING("Return Home"), CLAY_TEXT_CONFIG(ButtonLabelTextConfig));
+                };
+                CLAY(CLAY_ID("PlayerDBAddButton"), MainButtonStyle) {
+                    CLAY_TEXT(CLAY_STRING("Add"), CLAY_TEXT_CONFIG(ButtonLabelTextConfig));
+                };
+                CLAY(CLAY_ID("PlayerDBRemoveButton"), MainButtonStyle) {
+                    CLAY_TEXT(CLAY_STRING("Remove"), CLAY_TEXT_CONFIG(ButtonLabelTextConfig));
+                };
+                CLAY(CLAY_ID("PlayerDBEditButton"), MainButtonStyle) {
+                    CLAY_TEXT(CLAY_STRING("Edit"), CLAY_TEXT_CONFIG(ButtonLabelTextConfig));
+                };
+            };
+            
+            CLAY(CLAY_ID("SidebarBottom"), SidebarBottomPartWindowStyle) {
+                CLAY(CLAY_ID("PlayerTextBox"), {SingleLineTextContainer, .backgroundColor = COLOR_GRAY_BG, .cornerRadius = CLAY_CORNER_RADIUS(5), .border = {.width = {.left = 2, .right = 2, .top = 2, .bottom = 2}, .color = COLOR_WHITE }}){
+
+                    /* Create char* and set equal to the overall buffer that reads keyboard input */
+                    char * SearchText = &TextBuffer[0];
+                    /* Custom clay_string to allow for a dynamically changing char* */
+                    Clay_String SomeTextMaybe = {.isStaticallyAllocated = true, .length = SDL_strlen(SearchText), .chars = SearchText};
+                    /* Using dynamically changing char * SearchText */
+                    CLAY_TEXT(SomeTextMaybe, CLAY_TEXT_CONFIG(InputTextTextConfig));       
+                };
+
+                CLAY(CLAY_ID("PlayerDBSearchButton"), MainButtonStyle) {
+                    // Clay_OnHover(ReturnToMainScreenCallback, (intptr_t)WindowState); TODO: Fill this in with a sql search function
+                    CLAY_TEXT(CLAY_STRING("Search"), CLAY_TEXT_CONFIG(ButtonLabelTextConfig));
+                };                
+            };
         };
-    }
+
+        /* Main content containing monster lists and stats*/
+        CLAY(CLAY_ID("PlayerDBContentWindow"), ContentWindowStyle){
+            CLAY(CLAY_ID("PlayerDBHeader"), { HeadLabelWindow,.cornerRadius = CLAY_CORNER_RADIUS(10), .backgroundColor = COLOR_RED}) {
+                CLAY_TEXT(CLAY_STRING("Player DB"), CLAY_TEXT_CONFIG(WindowLabelText));
+            };          
+        };
+    };
 }
 
 /*-------------------------------------------------------------------------------------------*

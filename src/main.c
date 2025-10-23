@@ -57,7 +57,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     }
     *appstate = state;
 
-    if (!SDL_CreateWindowAndRenderer("Clay Demo", 1280, 720, 0, &state->window, &state->rendererData.renderer)) {
+    if (!SDL_CreateWindowAndRenderer("GUIDNBATTER", 1280, 720, 0, &state->window, &state->rendererData.renderer)) {
         SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Failed to create window and renderer: %s", SDL_GetError());
         return SDL_APP_FAILURE;
     }
@@ -106,12 +106,11 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
     SDL_AppResult ret_val = SDL_APP_CONTINUE;
     AppState *state = appstate;
 
-        // === Text input buffer ===
-    
-    // size_t textLength = 0;
-    // bool running = true;
-    // bool textInputActive = false;
-    // textInputActive = true;
+    if (!SDL_GetWindowSizeInPixels(state->window, &WindowWidth, &WindowHeight)) {
+        SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Failed to get window size: %s", SDL_GetError());
+        return SDL_APP_FAILURE;
+    }
+
     const bool * KeyState = SDL_GetKeyboardState(NULL);
 
     switch (event->type) {

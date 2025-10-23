@@ -26,16 +26,11 @@ extern char TextBuffer[MAX_TEXT];
 
 extern int WindowState;
 
+extern int WindowWidth;
+extern int WindowHeight;
+
 extern const int FONT_ID_BODY_16;
 extern const int FONT_ID_BODY_32;
-
-extern const Clay_Color COLOR_ORANGE;
-extern const Clay_Color COLOR_BLUE;
-extern const Clay_Color COLOR_LIGHT;
-extern const Clay_Color COLOR_BLACK;
-extern const Clay_Color COLOR_RED;
-extern const Clay_Color COLOR_GREEN;
-extern const Clay_Color COLOR_WHITE;
 
 typedef struct {
     SDL_Renderer *renderer;

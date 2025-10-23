@@ -4,30 +4,35 @@
 #include "clay.h"
 #include <stdio.h>
 
-extern const Clay_LayoutConfig TTBParentWindow;
+#define SIDEBAR_WIDTH_PX    300
 
-extern const Clay_LayoutConfig LTRParentWindow;
+Clay_ElementDeclaration MakeSidebarWindow(uint16_t width, uint16_t height, uint16_t padding, uint16_t childGap, uint16_t yAlign, uint16_t layoutDirection);
+Clay_ElementDeclaration MakeParentWindowStyle(uint16_t padding, uint16_t childGap, uint16_t layoutDirection, Clay_Color COLOR);
+Clay_ElementDeclaration MakeContentWindowStyle(uint16_t padding, uint16_t childGap, uint16_t yAlign, uint16_t layoutDirection, Clay_Color COLOR);
+Clay_ElementDeclaration MakeSidebarStyle(uint16_t width, uint16_t height, uint16_t padding, uint16_t childGap, uint16_t yAlign, uint16_t layoutDirection, Clay_Color COLOR);
+Clay_ElementDeclaration MakeButtonStyle(uint16_t width, uint16_t height, uint16_t padding, uint16_t childGap, Clay_Color COLOR);
 
-extern const Clay_LayoutConfig SidebarWindow;
+/* Colors */
+extern const Clay_Color COLOR_ORANGE;
+extern const Clay_Color COLOR_BLUE;
+extern const Clay_Color COLOR_LIGHT;
+extern const Clay_Color COLOR_BLACK;
+extern const Clay_Color COLOR_RED;
+extern const Clay_Color COLOR_GREEN;
+extern const Clay_Color COLOR_WHITE;
+extern const Clay_Color COLOR_GRAY_BG;
+extern const Clay_Color COLOR_BUTTON_GRAY;
 
-extern const Clay_ElementDeclaration SidebarWindowStyle;
-
-extern const Clay_LayoutConfig ContentWindow;
-
-extern const Clay_ElementDeclaration ContentWindowStyle;
+/* Styles */
 
 extern const Clay_LayoutConfig HeadLabelWindow;
 
 extern const Clay_LayoutConfig SingleLineTextContainer;
-
-extern const Clay_LayoutConfig MainButton;
 
 extern const Clay_TextElementConfig WindowLabelText;
 
 extern const Clay_TextElementConfig ButtonLabelTextConfig;
 
 extern const Clay_TextElementConfig InputTextTextConfig;
-
-extern const Clay_ElementDeclaration MainButtonStyle;
 
 #endif /* STYLES_H */
