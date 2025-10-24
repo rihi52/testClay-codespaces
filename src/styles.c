@@ -53,11 +53,17 @@ Clay_ElementDeclaration MakeFixedWidthGrowHeightWindow(uint16_t width, uint16_t 
     .layoutDirection = layoutDirection
     };
 
+    Clay_ClipElementConfig ClipConfig = {
+        .horizontal = false,
+        .vertical = isScroll,
+        .childOffset = Clay_GetScrollOffset()
+    };
+
     return (Clay_ElementDeclaration) {
         .layout = WindowConfig,
         .backgroundColor = COLOR,
         .cornerRadius = CLAY_CORNER_RADIUS(10),
-        .clip = { .horizontal = false, .vertical = isScroll, .childOffset = Clay_GetScrollOffset()}
+        .clip = ClipConfig
     };
 }
 
