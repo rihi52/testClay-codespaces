@@ -16,11 +16,11 @@
 #include "global.h"
 #include "main_window.h"
 #include "text_input.h"
+#include "db_query.h"
 
 
-
-const int MinimumWidth = 1280;
-const int MinimumHeight = 720;
+const int MinimumWidth = 1360;
+const int MinimumHeight = 800;
 
 const Uint32 FONT_ID = 0;
 
@@ -51,17 +51,20 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
         return SDL_APP_FAILURE;
     }
 
+
+
     AppState *state = SDL_calloc(1, sizeof(AppState));
     if (!state) {
         return SDL_APP_FAILURE;
     }
     *appstate = state;
 
-    if (!SDL_CreateWindowAndRenderer("GUIDNBATTER", 1280, 720, 0, &state->window, &state->rendererData.renderer)) {
+    if (!SDL_CreateWindowAndRenderer("GUIDNBATTER", 1280, 720, SDL_WINDOW_RESIZABLE, &state->window, &state->rendererData.renderer)) {
         SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Failed to create window and renderer: %s", SDL_GetError());
         return SDL_APP_FAILURE;
     }
-    SDL_SetWindowResizable(state->window, true);
+    //SDL_SetWindowResizable(state->window, true);
+    SDL_ShowWindow(state->window);
     SDL_SetWindowMinimumSize(state->window, MinimumWidth, MinimumHeight);
     SDL_StartTextInput(state->window);
 
@@ -96,7 +99,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     SDL_GetWindowSize(state->window, &width, &height);
     Clay_Initialize(clayMemory, (Clay_Dimensions) { (float) width, (float) height }, (Clay_ErrorHandler) { HandleClayErrors });
     Clay_SetMeasureTextFunction(SDL_MeasureText, state->rendererData.fonts);
-
+    Clay_SetDebugModeEnabled(true);
     *appstate = state;
     return SDL_APP_CONTINUE;
 }

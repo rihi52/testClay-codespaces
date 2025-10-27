@@ -1,20 +1,54 @@
 #ifndef STYLES_H
 #define STYLES_H
 
-#include "clay.h"
-#include <stdio.h>
+#define GLOBAL_RADIUS_LG_PX     12
+#define GLOBAL_RADIUS_SM_PX     8
+#define INPUT_BORDER_WIDTH_PX   2
+#define SIDEBAR_WIDTH_PX        300
+#define DB_LIST_WIDTH_PX        400
+#define DB_LIST_HEIGHT_PX       100
+#define MAIN_BTN_WIDTH_PX       200
+#define MAIN_BTN_HEIGHT_PX      50
+#define CREATURE_BTN_WIDTH_PX   300
+#define CREATURE_BTN_HEIGHT_PX  100
 
-#define SIDEBAR_WIDTH_PX    300
-#define DB_LIST_WIDTH_PX    400
+extern Clay_LayoutConfig SidebarTopLayoutConfig;
+extern Clay_LayoutConfig SidebarBottomLayoutConfig;
+extern Clay_LayoutConfig MainScreenLayoutConfig;
+extern Clay_LayoutConfig LTRParentWindowLayoutConfig;
+extern Clay_LayoutConfig SidebarLayoutConfig;
+extern Clay_LayoutConfig MainScreenButtonLayoutConfig;
+extern Clay_LayoutConfig CreatureButtonLayoutConfig;
+extern Clay_LayoutConfig CreatureButtonContainerLayoutConfig;
+extern Clay_TextElementConfig ButtonTextConfig;
+extern Clay_TextElementConfig InputTextConfig;
+extern Clay_TextElementConfig MainLabelTextConfig;
+extern Clay_LayoutConfig SingleLineInputLayoutConfig;
+extern Clay_LayoutConfig TTBParentWindowLayoutConfig;
 
-Clay_ElementDeclaration MakeFixedWidthLimitHeightWindow(uint16_t width, uint16_t height, uint16_t padding, uint16_t childGap, uint16_t yChildAlign, uint16_t layoutDirection);
-Clay_ElementDeclaration MakeParentWindowStyle(uint16_t padding, uint16_t childGap, uint16_t xChildAlign, uint16_t yChildAlign, uint16_t layoutDirection, Clay_Color COLOR);
-Clay_ElementDeclaration MakeSidebarStyle(uint16_t width, uint16_t height, uint16_t padding, uint16_t childGap, uint16_t yChildAlign, uint16_t layoutDirection, Clay_Color COLOR);
-Clay_ElementDeclaration FixedContainerTTBStyle(uint16_t width, uint16_t height, uint16_t padding, uint16_t childGap, Clay_Color COLOR);
-Clay_TextElementConfig  TextConfig(Clay_Color COLOR, uint16_t fontId, uint16_t fontSize, uint16_t textAlignment, uint16_t wrapMode);
-Clay_ElementDeclaration SingleLineTextContainerStyle(uint16_t width, uint16_t height, uint16_t padding, uint16_t childGap, Clay_Color COLOR, uint16_t cornerRadius, uint16_t borderWidthAll, Clay_Color BORDER_COLOR);
-Clay_ElementDeclaration MakeStatblockHeaderStyle( uint16_t height, uint16_t padding, uint16_t childGap, uint16_t yChildAlign, uint16_t layoutDirection, Clay_Color COLOR);
-Clay_ElementDeclaration MakeFixedWidthGrowHeightWindow(uint16_t width, uint16_t padding, uint16_t childGap, uint16_t xChildAlign, uint16_t yChildAlign, uint16_t layoutDirection, Clay_Color COLOR, bool isScroll);
+/* Container for creature buttons */
+extern Clay_LayoutConfig CreatureButtonLayoutConfig;
+
+/* Container for creature name container and cr container*/
+extern Clay_LayoutConfig NameContainerLayoutConfig;
+
+/* Container for creature name */
+extern Clay_LayoutConfig SizeCRContainerLayoutConfig;
+
+/* Container for creature cr */
+extern Clay_LayoutConfig CRContainerLayoutConfig;
+
+/* Container for creature name */
+extern Clay_LayoutConfig SizeContainerLayoutConfig;
+
+/**/
+/* Container for creature name container and cr container*/
+extern Clay_LayoutConfig TypeSrcContainerLayoutConfig;
+
+/* Container for creature cr */
+extern Clay_LayoutConfig TypeContainerLayoutConfig;
+/**/
+extern Clay_LayoutConfig SourceContainerLayoutConfig;
 
 /* Colors */
 extern const Clay_Color COLOR_ORANGE;
@@ -26,6 +60,7 @@ extern const Clay_Color COLOR_GREEN;
 extern const Clay_Color COLOR_WHITE;
 extern const Clay_Color COLOR_GRAY_BG;
 extern const Clay_Color COLOR_BUTTON_GRAY;
+extern const Clay_Color COLOR_TRANSPARENT;
 
 /* Styles */
 

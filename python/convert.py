@@ -7,22 +7,22 @@ OUTPUT_CSV = "monsters.csv" # Output CSV file name
 
 # === CSV HEADER ===
 headers = [
-    "ID","NAME","CR","TYPE","SIZE","ARMOR_CLASS","HITPOINTS_AVG","HIT_DICE","HITPOINTS_ROLL",
-    "SPEED_TYPE","SPEED_WALK","SPEED_FLY","SPEED_SWIM","SPEED_CLIMB","SPEED_BURROW",
-    "ALIGNMENT","LEGENDARY","STR","DEX","CON","INT","WIS","CHA","PROF_BONUS",
-    "THROW_STR","THROW_DEX","THROW_CON","THROW_INT","THROW_WIS","THROW_CHA",
-    "SKILLS","LANGUAGES","SENSES","RANGE_DARKVISION","RANGE_TREMORSENSE","RANGE_BLINDSIGHT","RANGE_TRUESIGHT",
-    "SPECIAL_ABILITY_ONE","SPECIAL_ABILITY_ONE_DESC","SPECIAL_ABILITY_TWO","SPECIAL_ABILITY_TWO_DESC",
-    "SPECIAL_ABILITY_THREE","SPECIAL_ABILITY_THREE_DESC","SPECIAL_ABILITY_FOUR","SPECIAL_ABILITY_FOUR_DESC",
-    "ATTACK_1","ATTACK_1_DESC","ATTACK_2","ATTACK_2_DESC","ATTACK_3","ATTACK_3_DESC","ATTACK_4","ATTACK_4_DESC","ATTACK_5_TYPE","ATTACK_5_DESC",
-    "ACTION_LEG","ACTION_LEG1","ACTION_LEG1_DESC","ACTION_LEG2","ACTION_LEG2_DESC","ACTION_LEG3","ACTION_LEG3_DESC",
-    "ACTION_LAIR","ACTION_LAIR1","ACTION_LAIR1_DESC","ACTION_LAIR2","ACTION_LAIR2_DESC","ACTION_LAIR3","ACTION_LAIR3_DESC",
-    "REGIONALEFFECT","REGIONALEFFECT1","REGIONALEFFECT2","REGIONALEFFECT3","ENDREGIONALEFFECT",
-    "ENVIRONMENT","BA1","BA1_DESC","BA2","BA2_DESC","BA3","BA3_DESC","BA4","BA4_DESC",
-    "REACTION1","REACTION1_DESC","REACTION2","REACTION2_DESC","REACTION3","REACTION3_DESC",
-    "VILL_ACTION","VILL_ACTION1","VILL_ACTION1_DESC","VILL_ACTION2","VILL_ACTION2_DESC","VILL_ACTION3","VILL_ACTION3_DESC",
-    "UTILITY_SPELLS","UTILITY_SPELLS_LIST",
-    "FEATURE1","FEATURE1_DESC","FEATURE2","FEATURE2_DESC","FEATURE3","FEATURE3_DESC","FEATURE4","FEATURE4_DESC","FEATURE5","FEATURE5_DESC"
+    "id","name","cr","type","size","armor_class","hitpoints_avg","hit_dice","hitpoints_roll",
+    "speed_type","speed_walk","speed_fly","speed_swim","speed_climb","speed_burrow",
+    "alignment","legendary","str","dex","con","int","wis","cha","prof_bonus",
+    "throw_str","throw_dex","throw_con","throw_int","throw_wis","throw_cha",
+    "skills","languages","senses","range_darkvision","range_tremorsense","range_blindsight","range_truesight",
+    "special_ability_one","special_ability_one_desc","special_ability_two","special_ability_two_desc",
+    "special_ability_three","special_ability_three_desc","special_ability_four","special_ability_four_desc",
+    "attack_1","attack_1_desc","attack_2","attack_2_desc","attack_3","attack_3_desc","attack_4","attack_4_desc","attack_5_type","attack_5_desc",
+    "action_leg","action_leg1","action_leg1_desc","action_leg2","action_leg2_desc","action_leg3","action_leg3_desc",
+    "action_lair","action_lair1","action_lair1_desc","action_lair2","action_lair2_desc","action_lair3","action_lair3_desc",
+    "regionaleffect","regionaleffect1","regionaleffect2","regionaleffect3","endregionaleffect",
+    "environment","ba1","ba1_desc","ba2","ba2_desc","ba3","ba3_desc","ba4","ba4_desc",
+    "reaction1","reaction1_desc","reaction2","reaction2_desc","reaction3","reaction3_desc",
+    "vill_action","vill_action1","vill_action1_desc","vill_action2","vill_action2_desc","vill_action3","vill_action3_desc",
+    "utility_spells","utility_spells_list",
+    "feature1","feature1_desc","feature2","feature2_desc","feature3","feature3_desc","feature4","feature4_desc","feature5","feature5_desc"
 ]
 
 # === HELPER FUNCTIONS ===
