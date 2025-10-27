@@ -2,7 +2,7 @@ import json
 import csv
 
 # === CONFIG ===
-INPUT_JSON = "monsters.json" # Path to your input JSON file
+INPUT_JSON = "monsters.json" # Input JSON file path
 OUTPUT_CSV = "monsters.csv" # Output CSV file name
 
 # === CSV HEADER ===
@@ -28,10 +28,11 @@ headers = [
 # === HELPER FUNCTIONS ===
 
 def get_value(data, key, default=0):
+    """Safely get value from dict, or return default."""
     return data.get(key, default) if isinstance(data, dict) else default
 
 def extract_first_n(entries, n):
-    """Extract up to n (name, desc) pairs from a list of dictionaries."""
+    """Extract up to n (name, desc) pairs from a list of dicts."""
     pairs = []
     for i in range(n):
         if isinstance(entries, list) and i < len(entries):
@@ -43,11 +44,13 @@ def extract_first_n(entries, n):
     return pairs
 
 def extract_speed(speed_dict):
+    """Normalize speed data (convert all to integers)."""
     out = {"type": 0, "walk": 0, "fly": 0, "swim": 0, "climb": 0, "burrow": 0}
     if not isinstance(speed_dict, dict):
         return out
     if speed_dict:
         out["type"] = ",".join(sorted(speed_dict.keys()))
+
     def parse_speed(val):
         if val is None:
             return 0
@@ -57,6 +60,7 @@ def extract_speed(speed_dict):
             digits = ''.join(ch for ch in val if ch.isdigit())
             return int(digits) if digits else 0
         return 0
+
     out["walk"] = parse_speed(speed_dict.get("walk", 0))
     out["fly"] = parse_speed(speed_dict.get("fly", 0))
     out["swim"] = parse_speed(speed_dict.get("swim", 0))
@@ -65,6 +69,7 @@ def extract_speed(speed_dict):
     return out
 
 def extract_range(senses, key):
+    """Extract numeric range from senses data."""
     val = get_value(senses, key, 0)
     if isinstance(val, int):
         return val
@@ -74,16 +79,19 @@ def extract_range(senses, key):
     return 0
 
 def parse_saving_throws(mon):
-    throws = {"STR":0,"DEX":0,"CON":0,"INT":0,"WIS":0,"CHA":0}
+    """Parse saving throws, handling multiple schema variations."""
+    throws = {"str":0,"dex":0,"con":0,"int":0,"wis":0,"cha":0}
     saving_throws = mon.get("saving_throws") or mon.get("saves")
+
+    # Case 1: direct saving throw dictionary
     if isinstance(saving_throws, dict) and saving_throws:
         mapping = {
-            "str": "STR", "strength": "STR",
-            "dex": "DEX", "dexterity": "DEX",
-            "con": "CON", "constitution": "CON",
-            "int": "INT", "intelligence": "INT",
-            "wis": "WIS", "wisdom": "WIS",
-            "cha": "CHA", "charisma": "CHA"
+            "str": "str", "strength": "str",
+            "dex": "dex", "dexterity": "dex",
+            "con": "con", "constitution": "con",
+            "int": "int", "intelligence": "int",
+            "wis": "wis", "wisdom": "wis",
+            "cha": "cha", "charisma": "cha"
         }
         for k, v in saving_throws.items():
             key_lower = k.lower()
@@ -91,6 +99,8 @@ def parse_saving_throws(mon):
                 sval = ''.join(ch for ch in str(v) if ch in "-0123456789")
                 throws[mapping[key_lower]] = int(sval) if sval else 0
         return throws
+
+    # Case 2: proficiencies list
     profs = mon.get("proficiencies", [])
     if isinstance(profs, list):
         for p in profs:
@@ -102,7 +112,7 @@ def parse_saving_throws(mon):
                 if "saving throw" in name_lower:
                     for ab in ["str","dex","con","int","wis","cha"]:
                         if ab in name_lower:
-                            throws[ab.upper()] = int(val) if val is not None else 0
+                            throws[ab] = int(val) if val is not None else 0
     return throws
 
 # === MAIN CONVERSION ===
@@ -116,87 +126,109 @@ with open(OUTPUT_CSV, "w", newline='', encoding="utf-8") as csvfile:
 
     for i, mon in enumerate(monsters, start=1):
         row = {h: 0 for h in headers}
-        row["ID"] = i
-        row["NAME"] = mon.get("name", 0)
-        row["CR"] = str(mon.get("challenge_rating", "0")) # always string
-        row["TYPE"] = mon.get("type", 0)
-        row["SIZE"] = mon.get("size", 0)
-        row["ALIGNMENT"] = mon.get("alignment", 0)
+
+        # Basic info
+        row["id"] = i
+        row["name"] = mon.get("name", 0)
+        row["cr"] = str(mon.get("challenge_rating", "0"))
+        row["type"] = mon.get("type", 0)
+        row["size"] = mon.get("size", 0)
+        row["alignment"] = mon.get("alignment", 0)
 
         # Armor class
-        if isinstance(mon.get("armor_class"), list) and mon["armor_class"]:
-            ac_item = mon["armor_class"][0]
-            row["ARMOR_CLASS"] = ac_item.get("value") or ac_item.get("ac") or 0
-        elif isinstance(mon.get("armor_class"), dict):
-            row["ARMOR_CLASS"] = mon["armor_class"].get("ac", 0)
+        ac = mon.get("armor_class")
+        if isinstance(ac, list) and ac:
+            ac_item = ac[0]
+            row["armor_class"] = ac_item.get("value") or ac_item.get("ac") or 0
+        elif isinstance(ac, dict):
+            row["armor_class"] = ac.get("ac", 0)
         else:
-            row["ARMOR_CLASS"] = mon.get("armor_class", 0)
+            row["armor_class"] = ac or 0
 
         # Hit points
-        if isinstance(mon.get("hit_points"), int):
-            row["HITPOINTS_AVG"] = mon["hit_points"]
-        elif isinstance(mon.get("hit_points"), dict):
-            row["HITPOINTS_AVG"] = mon["hit_points"].get("average", mon["hit_points"].get("value", 0))
+        hp = mon.get("hit_points")
+        if isinstance(hp, int):
+            row["hitpoints_avg"] = hp
+        elif isinstance(hp, dict):
+            row["hitpoints_avg"] = hp.get("average", hp.get("value", 0))
         else:
-            row["HITPOINTS_AVG"] = mon.get("hit_points", 0)
-        row["HIT_DICE"] = mon.get("hit_dice", 0)
-        row["HITPOINTS_ROLL"] = mon.get("hit_points_roll", 0)
+            row["hitpoints_avg"] = hp or 0
+        row["hit_dice"] = mon.get("hit_dice", 0)
+        row["hitpoints_roll"] = mon.get("hit_points_roll", 0)
 
         # Speed
         speeds = extract_speed(mon.get("speed", {}))
         for k, v in speeds.items():
-            row[f"SPEED_{k.upper()}"] = v
+            row[f"speed_{k}"] = v
 
-        # Ability scores
-        stats_list = mon.get("stats", [])
-        for key, idx in zip(["STR","DEX","CON","INT","WIS","CHA"], range(6)):
-            row[key] = int(mon.get(key.lower(), stats_list[idx] if len(stats_list) > idx else 0) or 0)
+        # === Ability Scores ===
+        ability_map = {
+            "str": ["str", "strength"],
+            "dex": ["dex", "dexterity"],
+            "con": ["con", "constitution"],
+            "int": ["int", "intelligence"],
+            "wis": ["wis", "wisdom"],
+            "cha": ["cha", "charisma"]
+        }
+        for key, aliases in ability_map.items():
+            val = 0
+            for alias in aliases:
+                if alias in mon:
+                    val = mon[alias]
+                    break
+            if not val and isinstance(mon.get("stats"), list):
+                stats_list = mon["stats"]
+                idx = list(ability_map.keys()).index(key)
+                if len(stats_list) > idx:
+                    val = stats_list[idx]
+            row[key] = int(val or 0)
 
-        # Prof bonus
-        row["PROF_BONUS"] = mon.get("proficiency_bonus", mon.get("proficiency", 0)) or 0
+        # Proficiency bonus
+        row["prof_bonus"] = mon.get("proficiency_bonus", mon.get("proficiency", 0)) or 0
 
         # Saving throws
         throws = parse_saving_throws(mon)
-        for ab in ["STR","DEX","CON","INT","WIS","CHA"]:
-            row[f"THROW_{ab}"] = throws.get(ab, 0)
+        for ab in ["str","dex","con","int","wis","cha"]:
+            row[f"throw_{ab}"] = throws.get(ab, 0)
 
         # Skills
         skills_obj = mon.get("skills", {})
         if isinstance(skills_obj, dict) and skills_obj:
-            row["SKILLS"] = ", ".join(f"{k.upper()} +{v}" for k, v in skills_obj.items())
+            row["skills"] = ", ".join(f"{k.upper()} +{v}" for k, v in skills_obj.items())
         else:
-            row["SKILLS"] = 0
+            row["skills"] = 0
 
         # Languages
         langs = mon.get("languages", 0)
-        row["LANGUAGES"] = ", ".join(langs) if isinstance(langs, list) else langs or 0
+        row["languages"] = ", ".join(langs) if isinstance(langs, list) else langs or 0
 
         # Senses
         senses = mon.get("senses", {})
         if isinstance(senses, dict) and senses:
-            row["SENSES"] = ", ".join(f"{k} {v}" for k,v in senses.items())
+            row["senses"] = ", ".join(f"{k} {v}" for k,v in senses.items())
             for sense in ["darkvision","tremorsense","blindsight","truesight"]:
-                row[f"RANGE_{sense.upper()}"] = extract_range(senses, sense)
+                row[f"range_{sense}"] = extract_range(senses, sense)
 
         # Environment
         env = mon.get("environments", mon.get("environment", mon.get("environment_list", [])))
-        row["ENVIRONMENT"] = ", ".join(env) if isinstance(env, list) else env or 0
+        row["environment"] = ", ".join(env) if isinstance(env, list) else env or 0
 
-        # === SPECIAL ABILITIES ===
+        # Special abilities
         special_abilities = extract_first_n(mon.get("special_abilities", []), 4)
         for idx, (name, desc) in enumerate(special_abilities, start=1):
-            row[f"SPECIAL_ABILITY_{['ONE','TWO','THREE','FOUR'][idx-1]}"] = name
-            row[f"SPECIAL_ABILITY_{['ONE','TWO','THREE','FOUR'][idx-1]}_DESC"] = desc
+            suffix = ["one","two","three","four"][idx-1]
+            row[f"special_ability_{suffix}"] = name
+            row[f"special_ability_{suffix}_desc"] = desc
 
-        # === ATTACKS / ACTIONS ===
+        # Actions / attacks
         attacks = extract_first_n(mon.get("actions", []), 5)
         for idx, (name, desc) in enumerate(attacks, start=1):
             if idx == 5:
-                row["ATTACK_5_TYPE"] = name
-                row["ATTACK_5_DESC"] = desc
+                row["attack_5_type"] = name
+                row["attack_5_desc"] = desc
             else:
-                row[f"ATTACK_{idx}"] = name
-                row[f"ATTACK_{idx}_DESC"] = desc
+                row[f"attack_{idx}"] = name
+                row[f"attack_{idx}_desc"] = desc
 
         writer.writerow(row)
 
