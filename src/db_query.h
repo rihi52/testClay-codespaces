@@ -7,5 +7,6 @@ extern sqlite3 * pGuidnbatterDB;
 
 void DatabaseOpen(void);
 void DatabaseClose(void);
+const char * LookUpMonster(int monster_id);
 
 #endif /* DB_QUERY */

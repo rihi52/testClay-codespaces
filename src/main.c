@@ -185,7 +185,7 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result)
         SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Application failed to run");
     }
 
-    DatabaseClose();
+    DatabaseClose(); 
 
     AppState *state = appstate;
     SDL_StopTextInput(state->window);

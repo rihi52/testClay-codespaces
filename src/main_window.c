@@ -4,6 +4,7 @@
 #include "global.h"
 #include "stdio.h"
 #include "text_input.h"
+#include "db_query.h"
 
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_keyboard.h>
@@ -157,7 +158,10 @@ void CreatureDatabaseWindow(AppState * state) {
 
                 CLAY(CLAY_ID("CreatureDBSearchButton"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
                     // Clay_OnHover(ReturnToMainScreenCallback, (intptr_t)WindowState); TODO: Fill this in with a sql search function
-                    CLAY_TEXT(CLAY_STRING("Search"), CLAY_TEXT_CONFIG(ButtonTextConfig));
+                    const char * lookup = LookUpMonster(2);
+                    Clay_String TempName = {.isStaticallyAllocated = true, .length = SDL_strlen(lookup), .chars = lookup};
+                    // CLAY_TEXT(CLAY_STRING("Search"), CLAY_TEXT_CONFIG(ButtonTextConfig));
+                    CLAY_TEXT(TempName, CLAY_TEXT_CONFIG(ButtonTextConfig));
                 };                
             };
         };
