@@ -51,7 +51,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
         return SDL_APP_FAILURE;
     }
 
-
+    DatabaseOpen();
 
     AppState *state = SDL_calloc(1, sizeof(AppState));
     if (!state) {
@@ -184,6 +184,8 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result)
     if (result != SDL_APP_SUCCESS) {
         SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Application failed to run");
     }
+
+    DatabaseClose();
 
     AppState *state = appstate;
     SDL_StopTextInput(state->window);

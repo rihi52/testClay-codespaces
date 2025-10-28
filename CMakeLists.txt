@@ -46,6 +46,8 @@ if(EMSCRIPTEN)
         src/main_window.c
         src/main.c
         src/styles.c
+        src/db_query.c
+        src/sql/sqlite3.c
     )
 
     # Link SDL libraries
@@ -82,10 +84,14 @@ else()
         SDL3_ttf::SDL3_ttf
         ${FREETYPE_LIBRARIES}
         ${HARFBUZZ_LIBRARIES}
+        m            # ✅ math library (needed by SQLite on some systems)
+        pthread      # ✅ threading library (needed by SQLite)
+        dl           # ✅ dynamic loading (needed by SQLite)
     )
 
     target_include_directories(guidnbatter PRIVATE
         ${FREETYPE_INCLUDE_DIRS}
         ${HARFBUZZ_INCLUDE_DIRS}
+        ${CMAKE_SOURCE_DIR}/src/sql   # ✅ SQLite headers
     )
 endif()

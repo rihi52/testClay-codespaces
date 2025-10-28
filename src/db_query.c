@@ -4,7 +4,7 @@
  *  SECTION - External variables that cannot be defined in header files   *
  *========================================================================*
  */
-sqlite3 * pCreatureDatabase;
+sqlite3 * pGuidnbatterDB;
 
 /*========================================================================*
  *  SECTION - Global function definitions                                 *
@@ -12,11 +12,11 @@ sqlite3 * pCreatureDatabase;
  */
 void DatabaseOpen(void) {
 
-    int rc = sqlite3_open("creatures.db", &pMonsterDb);
+    int rc = sqlite3_open("guidnbatter.db", &pGuidnbatterDB);
     if (rc)
     {
         /* Exit if the database can't be opened */
-        SDL_Log("Can't open database: %s", sqlite3_errmsg(pMonsterDb));
+        SDL_Log("Can't open database: %s", sqlite3_errmsg(pGuidnbatterDB));
         return;
     }
     else
@@ -24,4 +24,8 @@ void DatabaseOpen(void) {
         SDL_Log("Opened database successfully");
     }
     return;
+}
+
+void DatabaseClose(void) {
+    sqlite3_close(pGuidnbatterDB);
 }
