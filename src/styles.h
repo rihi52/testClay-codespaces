@@ -3,6 +3,7 @@
 
 #define GLOBAL_RADIUS_LG_PX     12
 #define GLOBAL_RADIUS_SM_PX     8
+#define MAIN_WINDOW_PADDING     8
 #define INPUT_BORDER_WIDTH_PX   2
 #define SIDEBAR_WIDTH_PX        300
 #define DB_LIST_WIDTH_PX        400
@@ -10,7 +11,7 @@
 #define MAIN_BTN_WIDTH_PX       200
 #define MAIN_BTN_HEIGHT_PX      50
 #define CREATURE_BTN_WIDTH_PX   300
-#define CREATURE_BTN_HEIGHT_PX  100
+#define CREATURE_BTN_HEIGHT_PX  80
 
 extern Clay_LayoutConfig SidebarTopLayoutConfig;
 extern Clay_LayoutConfig SidebarBottomLayoutConfig;

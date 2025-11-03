@@ -39,7 +39,6 @@ add_subdirectory(vendored/SDL_ttf EXCLUDE_FROM_ALL)
 # ------------------------------
 if(EMSCRIPTEN)
     set(CMAKE_EXECUTABLE_SUFFIX ".html" CACHE INTERNAL "")
-    set(DB_FILE "${CMAKE_SOURCE_DIR}/database/monsters.db")
 
     # Your game executable
     add_executable(guidnbatter
@@ -61,7 +60,6 @@ if(EMSCRIPTEN)
     # Preload resources folder so fonts/images work in browser
     set_target_properties(guidnbatter PROPERTIES
         LINK_FLAGS "--preload-file ${CMAKE_SOURCE_DIR}/resources@/resources"
-        LINK_FLAGS "--preload-file ${DB_FILE}@/monsters.db"
     )
 
     # Optional: additional Emscripten settings

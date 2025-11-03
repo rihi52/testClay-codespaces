@@ -4,6 +4,7 @@
         "stdlib.h": "c",
         "sdl_events.h": "c",
         "main_window.h": "c",
-        "sdl_main.h": "c"
+        "sdl_main.h": "c",
+        "sdl_keyboard.h": "c"
     }
 }

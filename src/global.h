@@ -1,13 +1,12 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-#define SDL_MAIN_HANDLED
 
 #include "clay.h"
 #include "stdio.h"
 #include "stdint.h"
-#include <SDL3/SDL.h>
-#include <SDL3/SDL_main.h>
+//#include <SDL3/SDL.h>
+// #include <SDL3/SDL_main.h>
 #include <SDL3_ttf/SDL_ttf.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3/SDL_keyboard.h>
@@ -28,6 +27,8 @@ extern int WindowState;
 
 extern int WindowWidth;
 extern int WindowHeight;
+extern float ScrollOffset;
+extern uint16_t TotalCreatures;
 
 extern const int FONT_ID_BODY_16;
 extern const int FONT_ID_BODY_32;

@@ -19,7 +19,7 @@ const Clay_Color COLOR_BUTTON_GRAY  = (Clay_Color) {70, 70, 70, 255};
 
 /*========================================================================* 
  *  SECTION - Global Functions
- *========================================================================* 
+ *========================================================================*
  */
 
 Clay_LayoutConfig SidebarTopLayoutConfig =  {
@@ -48,7 +48,7 @@ Clay_LayoutConfig CreatureButtonContainerLayoutConfig = {
 
 Clay_LayoutConfig MainScreenLayoutConfig = {
     .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
-    .padding = { 8, 8, 8, 8},
+    .padding = { MAIN_WINDOW_PADDING, MAIN_WINDOW_PADDING, MAIN_WINDOW_PADDING, MAIN_WINDOW_PADDING},
     .childGap = 40,
     .childAlignment =  { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER },
     .layoutDirection = CLAY_TOP_TO_BOTTOM

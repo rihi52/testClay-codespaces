@@ -1,67 +1,90 @@
-#include "db_query.h"
+// #include "db_query.h"
 
-/*========================================================================*
- *  SECTION - External variables that cannot be defined in header files   *
- *========================================================================*
- */
-sqlite3 * pGuidnbatterDB;
+// /*========================================================================*
+//  *  SECTION - External variables that cannot be defined in header files   *
+//  *========================================================================*
+//  */
+// sqlite3 * pGuidnbatterDB;
 
-/*========================================================================*
- *  SECTION - Global function definitions                                 *
- *========================================================================*
- */
-void DatabaseOpen(void) {
+// CreatureHeader DBPageHeaders[MAX_DB_COUNT] = {0};
 
-    int rc = sqlite3_open("../guidnbatter.db", &pGuidnbatterDB);
-    if (rc)
-    {
-        /* Exit if the database can't be opened */
-        SDL_Log("Can't open database: %s", sqlite3_errmsg(pGuidnbatterDB));
-        return;
-    }
-    else
-    {
-        SDL_Log("Opened database successfully");
-    }
-    return;
-}
+// /*========================================================================*
+//  *  SECTION - Global function definitions                                 *
+//  *========================================================================*
+//  */
+// void DatabaseOpen(void) {
 
-void DatabaseClose(void) {
-    sqlite3_close(pGuidnbatterDB);
-}
+//     int rc = sqlite3_open("../guidnbatter.db", &pGuidnbatterDB);
+//     if (rc)
+//     {
+//         /* Exit if the database can't be opened */
+//         SDL_Log("Can't open database: %s", sqlite3_errmsg(pGuidnbatterDB));
+//         return;
+//     }
+//     else
+//     {
+//         SDL_Log("Opened database successfully");
+//     }
 
-const char * LookUpMonster(int monster_id) {
-    
-    static char name_buffer[128]; // Persistent buffer for returned name
-    name_buffer[0] = '\0'; // Clear it
+//     // for (int i = 0; i < MAX_DB_COUNT; i++) {
+//     //     DBPageHeaders[i] = {0};
+//     // }
+//     return;
+// }
 
-    sqlite3_stmt *stmt = NULL;
-    const char *sql = "SELECT name FROM monsters WHERE id = ?";
+// void DatabaseClose(void) {
+//     sqlite3_close(pGuidnbatterDB);
+// }
 
-    int rc = sqlite3_prepare_v2(pGuidnbatterDB, sql, -1, &stmt, NULL);
-    if (rc != SQLITE_OK)
-    {
-        SDL_Log("Failed to prepare statement: %s", sqlite3_errmsg(pGuidnbatterDB));
-        return name_buffer;
-    }
+// Clay_String MakeClayString(const char * string) {
+//     char * copy = SDL_malloc(SDL_strlen(string)+1);
 
-    sqlite3_bind_int(stmt, 1, monster_id);
+//     SDL_strlcpy(copy, string, SDL_strlen(string)+1);
 
-    rc = sqlite3_step(stmt);
-    if (rc == SQLITE_ROW)
-    {
-        const unsigned char *name = sqlite3_column_text(stmt, 0);
-        if (name)
-        {
-            strncpy(name_buffer, (const char *)name, sizeof(name_buffer) - 1);
-            name_buffer[sizeof(name_buffer) - 1] = '\0'; // Ensure null-termination
-        }
-    }
-    else if (rc != SQLITE_DONE)
-    {
-        SDL_Log("Failed to execute statement: %s", sqlite3_errmsg(pGuidnbatterDB));
-    }
+//     Clay_String str= {
+//         .isStaticallyAllocated = false,
+//         .length = SDL_strlen(copy),
+//         .chars = copy
+//     };
 
-    sqlite3_finalize(stmt);
-    return name_buffer; // Safe static buffer
-}
+//     return str;
+// }
+
+// int LoadCreatureHeaderAlphabetical(int MonsterId) {
+
+//     sqlite3_stmt *stmt = NULL;
+//     const char *sql = "SELECT name, cr, size, type FROM monsters WHERE id = ?";
+
+//     int rc = sqlite3_prepare_v2(pGuidnbatterDB, sql, -1, &stmt, NULL);
+//     if (rc != SQLITE_OK)
+//     {
+//         SDL_Log("Failed to prepare statement: %s", sqlite3_errmsg(pGuidnbatterDB));
+//         return -1;
+//     }
+
+//     sqlite3_bind_int(stmt, 1, MonsterId + 1);
+
+//     rc = sqlite3_step(stmt);
+//     if (rc == SQLITE_ROW)
+//     {
+//         const char *Name    = sqlite3_column_text(stmt, 0);
+//         const char *Cr      = sqlite3_column_text(stmt, 1);
+//         const char *Size    = sqlite3_column_text(stmt, 2);
+//         const char *Type    = sqlite3_column_text(stmt, 3);
+//         //const char *Source  = sqlite3_column_text(stmt, 4);
+
+//         DBPageHeaders[MonsterId].CreatureName = MakeClayString(Name);
+//         DBPageHeaders[MonsterId].CreatureCR = MakeClayString(Cr);
+//         DBPageHeaders[MonsterId].CreatureSize = MakeClayString(Size);
+//         DBPageHeaders[MonsterId].CreatureType = MakeClayString(Type);
+        
+//     }
+//     else if (rc != SQLITE_DONE)
+//     {
+//         SDL_Log("Failed to execute statement: %s", sqlite3_errmsg(pGuidnbatterDB));
+//     }
+
+//     sqlite3_finalize(stmt);
+//     if (NULL == DBPageHeaders[MonsterId].CreatureName.chars) return 1;
+//     return 0;
+// }
