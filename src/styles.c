@@ -166,6 +166,22 @@ Clay_LayoutConfig SingleLineInputLayoutConfig = {
     .layoutDirection = CLAY_TOP_TO_BOTTOM
 };
 
+Clay_LayoutConfig StatPageContainer = {
+    .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
+    .padding = { MAIN_WINDOW_PADDING, MAIN_WINDOW_PADDING, MAIN_WINDOW_PADDING, MAIN_WINDOW_PADDING},
+    .childGap = 0,
+    .childAlignment =  { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_TOP },
+    .layoutDirection = CLAY_TOP_TO_BOTTOM
+};
+
+Clay_LayoutConfig StatePageDivider = {
+    .sizing = { CLAY_SIZING_FIT(0), CLAY_SIZING_FIT(0) },
+    .padding = { 0, 0, 0, 0},
+    .childGap = 0,
+    .childAlignment =  { CLAY_ALIGN_X_LEFT, CLAY_ALIGN_Y_TOP },
+    .layoutDirection = CLAY_LEFT_TO_RIGHT
+};
+
 Clay_TextElementConfig MainLabelTextConfig = {
     .textColor = COLOR_WHITE,
     .fontId = 0,

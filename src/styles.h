@@ -27,6 +27,9 @@ extern Clay_TextElementConfig MainLabelTextConfig;
 extern Clay_LayoutConfig SingleLineInputLayoutConfig;
 extern Clay_LayoutConfig TTBParentWindowLayoutConfig;
 
+extern Clay_LayoutConfig StatPageContainer;
+extern Clay_LayoutConfig StatePageDivider;
+
 /* Container for creature buttons */
 extern Clay_LayoutConfig CreatureButtonLayoutConfig;
 
