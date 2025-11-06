@@ -1,8 +1,8 @@
-// #ifndef DB_QUERY
-// #define DB_QUERY
+#ifndef DB_QUERY
+#define DB_QUERY
 // #include "sql/sqlite3.h"
-// #include <SDL3/SDL.h>
-// #include "clay.h"
+#include <SDL3/SDL.h>
+#include "clay.h"
 
 // #define MAX_DB_COUNT 1000
 
@@ -21,6 +21,6 @@
 // void DatabaseOpen(void);
 // void DatabaseClose(void);
 // int LoadCreatureHeaderAlphabetical(int MonsterId);
-// Clay_String MakeClayString(const char * string);
+Clay_String MakeClayString(const char * string);
 
-// #endif /* DB_QUERY */
+#endif /* DB_QUERY */

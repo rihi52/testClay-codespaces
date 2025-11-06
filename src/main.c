@@ -61,6 +61,25 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     //     }        
     // };
 
+    StatName = MakeClayString("Aboleth");
+    StatSize = MakeClayString("Large");
+    StatType = MakeClayString("Aberration");
+    StatAC = MakeClayString("Armor Class: 17 (natural armor)");
+    StatHP = MakeClayString("Hit Points: 135 (18d10 + 36)");
+    StatSpeed = MakeClayString("Speed: 10 ft., swim 40 ft.");
+    StatStr = MakeClayString("STR 21 (+5)");
+    StatDex = MakeClayString("DEX 9 (-1)");
+    StatCon = MakeClayString("CON 15 (+2)");
+    StatInt = MakeClayString("INT 18 (+4)");
+    StatWis = MakeClayString("WIS 15 (+2)");
+    StatCha = MakeClayString("CHA 18 (+4)");
+
+    StatSaves = MakeClayString("Saving Throws Con +6, Int +8, Wis +6");
+    StatSkills = MakeClayString("Skills History +12, Perception +10");
+    StatSenses = MakeClayString("Senses darkvision 120 ft., passive Perception 20");
+    StatLanguages = MakeClayString("Languages Deep Speech, telepathy 120 ft.");
+    StatCR = MakeClayString("Challenge 10 (5,900 XP)");
+
     AppState *state = SDL_calloc(1, sizeof(AppState));
     if (!state) {
         return SDL_APP_FAILURE;

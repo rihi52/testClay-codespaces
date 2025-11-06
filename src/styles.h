@@ -29,6 +29,10 @@ extern Clay_LayoutConfig TTBParentWindowLayoutConfig;
 
 extern Clay_LayoutConfig StatPageContainer;
 extern Clay_LayoutConfig StatePageDivider;
+extern Clay_LayoutConfig StatePageSubDivider;
+extern Clay_LayoutConfig StatePageAbilityDivider;
+extern Clay_TextElementConfig StatPageTextConfig;
+extern Clay_TextElementConfig StatPageAbilityScoreTextConfig;
 
 /* Container for creature buttons */
 extern Clay_LayoutConfig CreatureButtonLayoutConfig;

@@ -1,4 +1,4 @@
-// #include "db_query.h"
+#include "db_query.h"
 
 // /*========================================================================*
 //  *  SECTION - External variables that cannot be defined in header files   *
@@ -36,19 +36,19 @@
 //     sqlite3_close(pGuidnbatterDB);
 // }
 
-// Clay_String MakeClayString(const char * string) {
-//     char * copy = SDL_malloc(SDL_strlen(string)+1);
+Clay_String MakeClayString(const char * string) {
+    char * copy = SDL_malloc(SDL_strlen(string)+1);
 
-//     SDL_strlcpy(copy, string, SDL_strlen(string)+1);
+    SDL_strlcpy(copy, string, SDL_strlen(string)+1);
 
-//     Clay_String str= {
-//         .isStaticallyAllocated = false,
-//         .length = SDL_strlen(copy),
-//         .chars = copy
-//     };
+    Clay_String str= {
+        .isStaticallyAllocated = false,
+        .length = SDL_strlen(copy),
+        .chars = copy
+    };
 
-//     return str;
-// }
+    return str;
+}
 
 // int LoadCreatureHeaderAlphabetical(int MonsterId) {
 

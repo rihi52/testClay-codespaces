@@ -44,4 +44,23 @@ typedef struct app_state {
     Clay_SDL3RendererData rendererData;
 } AppState;
 
+extern Clay_String StatName;
+extern Clay_String StatSize;
+extern Clay_String StatType;
+extern Clay_String StatAC;
+extern Clay_String StatHP;
+extern Clay_String StatSpeed;
+extern Clay_String StatStr;
+extern Clay_String StatDex;
+extern Clay_String StatCon;
+extern Clay_String StatInt;
+extern Clay_String StatWis;
+extern Clay_String StatCha;
+
+extern Clay_String StatSaves;
+extern Clay_String StatSkills;
+extern Clay_String StatSenses;
+extern Clay_String StatLanguages;
+extern Clay_String StatCR;
+
 #endif /* GLOBAL_H */
