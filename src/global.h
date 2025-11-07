@@ -63,4 +63,13 @@ extern Clay_String StatSenses;
 extern Clay_String StatLanguages;
 extern Clay_String StatCR;
 
+extern Clay_String StatRacial1;
+extern Clay_String StatRacial2;
+extern Clay_String StatRacial3;
+
+extern Clay_String StatAction1;
+extern Clay_String StatAction2;
+extern Clay_String StatAction3;
+extern Clay_String StatAction4;
+
 #endif /* GLOBAL_H */

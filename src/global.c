@@ -32,3 +32,12 @@ Clay_String StatSkills = {0};
 Clay_String StatSenses = {0};
 Clay_String StatLanguages = {0};
 Clay_String StatCR = {0};
+
+Clay_String StatRacial1 = {0};
+Clay_String StatRacial2 = {0};
+Clay_String StatRacial3 = {0};
+
+Clay_String StatAction1 = {0};
+Clay_String StatAction2 = {0};
+Clay_String StatAction3 = {0};
+Clay_String StatAction4 = {0};

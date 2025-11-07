@@ -174,25 +174,25 @@ Clay_LayoutConfig StatPageContainer = {
     .layoutDirection = CLAY_TOP_TO_BOTTOM
 };
 
-Clay_LayoutConfig StatePageDivider = {
-    .sizing = { CLAY_SIZING_FIT(0), CLAY_SIZING_FIT(0) },
-    .padding = { 0, 0, 0, 0},
+Clay_LayoutConfig StatPageDivider = {
+    .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_FIT(0) },
+    .padding = { 4, 4, 4, 4},
     .childGap = 0,
     .childAlignment =  { CLAY_ALIGN_X_LEFT, CLAY_ALIGN_Y_TOP },
     .layoutDirection = CLAY_TOP_TO_BOTTOM
 };
 
-Clay_LayoutConfig StatePageSubDivider = {
-    .sizing = { CLAY_SIZING_FIT(0), CLAY_SIZING_FIT(0) },
-    .padding = { 0, 0, 0, 0},
+Clay_LayoutConfig StatPageSubDivider = {
+    .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_FIT(0) },
+    .padding = { 4, 4, 4, 4},
     .childGap = 8,
     .childAlignment =  { CLAY_ALIGN_X_LEFT, CLAY_ALIGN_Y_CENTER},
     .layoutDirection = CLAY_LEFT_TO_RIGHT
 };
 
-Clay_LayoutConfig StatePageAbilityDivider = {
+Clay_LayoutConfig StatPageAbilityDivider = {
     .sizing = { CLAY_SIZING_FIXED(80), CLAY_SIZING_FIT(0) },
-    .padding = { 0, 0, 0, 0},
+    .padding = { 4, 4, 4, 4},
     .childGap = 0,
     .childAlignment =  { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER},
     .layoutDirection = CLAY_LEFT_TO_RIGHT
@@ -225,7 +225,7 @@ Clay_TextElementConfig InputTextConfig = {
 Clay_TextElementConfig StatPageTextConfig = {
     .textColor = COLOR_WHITE,
     .fontId = 0,
-    .fontSize = 18,
+    .fontSize = 16,
     .textAlignment = CLAY_TEXT_ALIGN_LEFT,
     .wrapMode = CLAY_TEXT_WRAP_WORDS
 };
