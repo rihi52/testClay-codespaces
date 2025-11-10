@@ -12,11 +12,12 @@
 #include <SDL3/SDL_keyboard.h>
 #include <SDL3/SDL_events.h>
 
-#define MAIN_SCREEN 0
+#define MAIN_SCREEN             0
 #define START_ENCOUNTER_SCREEN  1
 #define BUILD_ENCOUNTER_SCREEN  2
 #define CREATURE_DB_SCREEN      3
 #define PLAYER_DB_SCREEN        4
+#define ADD_STAT_SCREEN         5
 
 #define MAX_TEXT 256
 extern char TextBuffer[MAX_TEXT];
