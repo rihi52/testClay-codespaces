@@ -58,9 +58,12 @@ if(EMSCRIPTEN)
     )
 
     # Preload resources folder so fonts/images work in browser
-    set_target_properties(guidnbatter PROPERTIES
-        LINK_FLAGS "--preload-file ${CMAKE_SOURCE_DIR}/resources@/resources"
-    )
+    # set_target_properties(guidnbatter PROPERTIES
+    #     # LINK_FLAGS "--preload-file ${CMAKE_SOURCE_DIR}/resources@/resources"
+    # )
+target_link_options(guidnbatter PRIVATE
+    "--embed-file" "${CMAKE_SOURCE_DIR}/resources/Roboto-Regular.ttf@resources/Roboto-Regular.ttf"
+)
 
     # Optional: additional Emscripten settings
     target_link_options(guidnbatter PRIVATE
