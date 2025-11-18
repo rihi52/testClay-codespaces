@@ -5,6 +5,7 @@
 #include "stdio.h"
 #include "text_input.h"
 #include "db_query.h"
+#include "build_encounter.h"
 
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_keyboard.h>
@@ -14,14 +15,13 @@
  *========================================================================* 
  */
 
-static void ReturnToMainScreenCallback(Clay_ElementId elementId, Clay_PointerData pointerData, intptr_t userData);
+
 static void StartEncounterButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, intptr_t userData);
 static void BuildEncounterButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, intptr_t userData);
 static void CreatureDatabaseButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, intptr_t userData);
 static void PlayerDatabaseButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, intptr_t userData);
 static void CallStatBlockCallback(Clay_ElementId elementId, Clay_PointerData pointerData, intptr_t userData);
 
-void BuildEncounterWindow(AppState * state);
 void CreatureDatabaseWindow(AppState * state);
 void PlayerDatabaseWindow(AppState * state);
 void MakeCreatureHeader(int i);
@@ -89,9 +89,7 @@ Clay_RenderCommandArray MainWindow(AppState * state)
             break;
         
         case BUILD_ENCOUNTER_SCREEN:
-            CLAY(CLAY_ID("BuildEncounterHeader"), { HeadLabelWindow,.cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX), .backgroundColor = COLOR_ORANGE}) {
-                Clay_OnHover(ReturnToMainScreenCallback, (intptr_t)WindowState);
-            };
+            BuildEncounterWindow(state);            
             break;
         
         case CREATURE_DB_SCREEN:
@@ -119,9 +117,6 @@ Clay_RenderCommandArray MainWindow(AppState * state)
  *========================================================================*
  */
 
-void BuildEncounterWindow(AppState * state) {
-
-}
 
 void CreatureDatabaseWindow(AppState * state) {
     /* Creature database window*/
@@ -530,16 +525,6 @@ void FillStats(void) {
 /*-------------------------------------------------------------------------------------------*
 *                                    Button Callbacks                                        *
 *--------------------------------------------------------------------------------------------*/
-
-static void ReturnToMainScreenCallback(Clay_ElementId elementId, Clay_PointerData pointerData, intptr_t userData) {
-    int check = (int) userData;
-    if (pointerData.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME) {
-        SDL_memset(TextBuffer, 0, sizeof(TextBuffer));
-        ScrollOffset = 0;
-        //WindowState = MAIN_SCREEN;
-        WindowState = ADD_STAT_SCREEN;
-    }
-}
 
 static void StartEncounterButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, intptr_t userData) {
     int check = (int) userData;

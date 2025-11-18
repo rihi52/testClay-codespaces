@@ -73,4 +73,6 @@ extern Clay_String StatAction2;
 extern Clay_String StatAction3;
 extern Clay_String StatAction4;
 
+void ReturnToMainScreenCallback(Clay_ElementId elementId, Clay_PointerData pointerData, intptr_t userData);
+
 #endif /* GLOBAL_H */

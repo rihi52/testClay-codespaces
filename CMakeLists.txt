@@ -48,6 +48,7 @@ if(EMSCRIPTEN)
         src/styles.c
         src/db_query.c
         src/sql/sqlite3.c
+        src/build_encounter.c
     )
 
     # Link SDL libraries
@@ -79,6 +80,7 @@ else()
         src/main_window.c
         src/main.c
         src/styles.c
+        src/build_encounter.c
     )
 
     target_link_libraries(guidnbatter PRIVATE
