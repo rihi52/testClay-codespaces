@@ -21,6 +21,10 @@ cmake --build build -- -s USE_FREETYPE=1 -s USE_HARFBUZZ=1
 python3 -m http.server 8080
 ```
 
+linked list for build encounter
+search field on creature and player side
+
+
 CREATE TABLE monsters (
     id INTEGER PRIMARY KEY,
     name TEXT,

@@ -24,7 +24,7 @@ static void CallStatBlockCallback(Clay_ElementId elementId, Clay_PointerData poi
 
 void CreatureDatabaseWindow(AppState * state);
 void PlayerDatabaseWindow(AppState * state);
-void MakeCreatureHeader(int i);
+
 void FillStats(void);
 
 /*========================================================================* 
@@ -145,14 +145,14 @@ void CreatureDatabaseWindow(AppState * state) {
             
             CLAY(CLAY_ID("SidebarBottom"), SidebarBottomLayoutConfig ) {
                 CLAY(CLAY_ID("CreatureTextBox"), {
-                                                    SingleLineInputLayoutConfig,
-                                                    .backgroundColor = COLOR_GRAY_BG,
-                                                    .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_SM_PX),
-                                                    .border = {
-                                                                .width = CLAY_BORDER_ALL(INPUT_BORDER_WIDTH_PX),
-                                                                .color = COLOR_WHITE
-                                                            }
-                                                }){
+                    SingleLineInputLayoutConfig,
+                    .backgroundColor = COLOR_GRAY_BG,
+                    .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_SM_PX),
+                    .border = {
+                        .width = CLAY_BORDER_ALL(INPUT_BORDER_WIDTH_PX),
+                        .color = COLOR_WHITE
+                    }
+                }){
                     /* Create char* and set equal to the overall buffer that reads keyboard input */
                     char * SearchText = &TextBuffer[0];
                     /* Custom clay_string to allow for a dynamically changing char* */
@@ -169,7 +169,11 @@ void CreatureDatabaseWindow(AppState * state) {
         };
 
         /* Main content containing monster lists and stats*/
-        CLAY(CLAY_ID("CreatureDBContentWindow"), {LTRParentWindowLayoutConfig, .backgroundColor = COLOR_BLACK, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
+        CLAY(CLAY_ID("CreatureDBContentWindow"), {
+            LTRParentWindowLayoutConfig,
+            .backgroundColor = COLOR_BLACK,
+            .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)
+        }) {
             // TODO: Fill with statblocks with info pulled from sqlite db
             // 1. Design a stat block
             // 2. Find a way to collapse and expand it
@@ -183,126 +187,10 @@ void CreatureDatabaseWindow(AppState * state) {
             }) {
 
                 for (int i = 0; i < 30; i++) {
-                    MakeCreatureHeader(i);
+                    MakeCreatureHeader(i, CREATURE_DB_SCREEN);
                 }
             }
             FillStats();
-            // CLAY(CLAY_ID("StatPage"), {StatPageContainer, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX), .clip = {false, true, Clay_GetScrollOffset()}}) {
-            //     // TODO: need a bunch of elements to format the stat page and fill them with a bunch of CLAY_STRINGS
-
-            //     CLAY(CLAY_ID("NameContainer"), {
-            //         StatPageDivider,
-            //         .backgroundColor = COLOR_TRANSPARENT,
-            //         .border = { .width = { .bottom = 5 }, .color = COLOR_BLACK }
-            //     }) {
-            //         CLAY_TEXT(StatName, CLAY_TEXT_CONFIG(StatPageTextConfig));
-            //     };
-            //     CLAY(CLAY_ID("ACHPContainer"), {StatPageDivider, .backgroundColor = COLOR_TRANSPARENT, .border = { .width = { .bottom = 5 }, .color = COLOR_BLACK }}) {
-            //         CLAY(CLAY_ID("ACContainer"), {StatPageSubDivider, .backgroundColor = COLOR_TRANSPARENT}) {
-            //             CLAY_TEXT(StatAC, CLAY_TEXT_CONFIG(StatPageTextConfig));
-            //         }
-            //         CLAY(CLAY_ID("HPContainer"), {StatPageSubDivider, .backgroundColor = COLOR_TRANSPARENT}) {
-            //             CLAY_TEXT(StatHP, CLAY_TEXT_CONFIG(StatPageTextConfig));
-            //         }
-            //     }; /* Start Ability Scores container*/
-            //     CLAY(CLAY_ID("AbilityScoresContainer"), {StatPageDivider, .backgroundColor = COLOR_TRANSPARENT}) {
-            //         /* Ability score labels*/
-            //         CLAY_AUTO_ID({StatPageSubDivider, .backgroundColor = COLOR_TRANSPARENT}) {
-            //             CLAY_AUTO_ID({StatPageAbilityDivider, .backgroundColor = COLOR_TRANSPARENT}) {
-            //                 CLAY_TEXT(CLAY_STRING("STR"), CLAY_TEXT_CONFIG(StatPageAbilityScoreTextConfig));
-            //             }
-            //             CLAY_AUTO_ID({StatPageAbilityDivider, .backgroundColor = COLOR_TRANSPARENT}) {
-            //                 CLAY_TEXT(CLAY_STRING("DEX"), CLAY_TEXT_CONFIG(StatPageAbilityScoreTextConfig));
-            //             }
-            //             CLAY_AUTO_ID({StatPageAbilityDivider, .backgroundColor = COLOR_TRANSPARENT}) {
-            //                 CLAY_TEXT(CLAY_STRING("CON"), CLAY_TEXT_CONFIG(StatPageAbilityScoreTextConfig));
-            //             }
-            //             CLAY_AUTO_ID({StatPageAbilityDivider, .backgroundColor = COLOR_TRANSPARENT}) {
-            //                 CLAY_TEXT(CLAY_STRING("INT"), CLAY_TEXT_CONFIG(StatPageAbilityScoreTextConfig));
-            //             }
-            //             CLAY_AUTO_ID({StatPageAbilityDivider, .backgroundColor = COLOR_TRANSPARENT}) {
-            //                 CLAY_TEXT(CLAY_STRING("WIS"), CLAY_TEXT_CONFIG(StatPageAbilityScoreTextConfig));
-            //             }
-            //             CLAY_AUTO_ID({StatPageAbilityDivider, .backgroundColor = COLOR_TRANSPARENT}) {
-            //                 CLAY_TEXT(CLAY_STRING("CHA"), CLAY_TEXT_CONFIG(StatPageAbilityScoreTextConfig));
-            //             }
-            //         } /* Ability score values*/
-            //         CLAY_AUTO_ID({StatPageSubDivider, .backgroundColor = COLOR_TRANSPARENT, .border = { .width = { .bottom = 5 }, .color = COLOR_BLACK }}) {
-            //             CLAY_AUTO_ID({StatPageAbilityDivider, .backgroundColor = COLOR_TRANSPARENT}) {
-            //                 CLAY_TEXT(StatStr, CLAY_TEXT_CONFIG(StatPageAbilityScoreTextConfig));
-            //             }
-            //             CLAY_AUTO_ID({StatPageAbilityDivider, .backgroundColor = COLOR_TRANSPARENT}) {
-            //                 CLAY_TEXT(StatDex, CLAY_TEXT_CONFIG(StatPageAbilityScoreTextConfig));
-            //             }
-            //             CLAY_AUTO_ID({StatPageAbilityDivider, .backgroundColor = COLOR_TRANSPARENT}) {
-            //                 CLAY_TEXT(StatCon, CLAY_TEXT_CONFIG(StatPageAbilityScoreTextConfig));
-            //             }
-            //             CLAY_AUTO_ID({StatPageAbilityDivider, .backgroundColor = COLOR_TRANSPARENT}) {
-            //                 CLAY_TEXT(StatInt, CLAY_TEXT_CONFIG(StatPageAbilityScoreTextConfig));
-            //             }
-            //             CLAY_AUTO_ID({StatPageAbilityDivider, .backgroundColor = COLOR_TRANSPARENT}) {
-            //                 CLAY_TEXT(StatWis, CLAY_TEXT_CONFIG(StatPageAbilityScoreTextConfig));
-            //             }
-            //             CLAY_AUTO_ID({StatPageAbilityDivider, .backgroundColor = COLOR_TRANSPARENT}) {
-            //                 CLAY_TEXT(StatCha, CLAY_TEXT_CONFIG(StatPageAbilityScoreTextConfig));
-            //             }
-            //         }
-            //     }; /* Write senses  */
-            //     CLAY(CLAY_ID("SensesContainer"), {StatPageDivider, .backgroundColor = COLOR_TRANSPARENT, .border = { .width = { .bottom = 5 }, .color = COLOR_BLACK }}) {
-            //         CLAY_AUTO_ID({StatPageSubDivider, .backgroundColor = COLOR_TRANSPARENT}) {
-            //             CLAY_TEXT(StatSaves, CLAY_TEXT_CONFIG(StatPageTextConfig));
-            //         }
-            //         CLAY_AUTO_ID({StatPageSubDivider, .backgroundColor = COLOR_TRANSPARENT}) {
-            //             CLAY_TEXT(StatSkills, CLAY_TEXT_CONFIG(StatPageTextConfig));
-            //         }
-            //         CLAY_AUTO_ID({StatPageSubDivider, .backgroundColor = COLOR_TRANSPARENT}) {
-            //             CLAY_TEXT(StatSenses, CLAY_TEXT_CONFIG(StatPageTextConfig));
-            //         }
-            //         CLAY_AUTO_ID({StatPageSubDivider, .backgroundColor = COLOR_TRANSPARENT}) {
-            //             CLAY_TEXT(StatLanguages, CLAY_TEXT_CONFIG(StatPageTextConfig));
-            //         }
-            //         CLAY_AUTO_ID({StatPageSubDivider, .backgroundColor = COLOR_TRANSPARENT}) {
-            //             CLAY_TEXT(StatCR, CLAY_TEXT_CONFIG(StatPageTextConfig));
-            //         }
-            //     }; /* Write racial traits/features */
-            //     CLAY(CLAY_ID("RacialContainer"), {StatPageDivider, .backgroundColor = COLOR_TRANSPARENT, .border = { .width = { .bottom = 5 }, .color = COLOR_BLACK }}) {
-            //         CLAY_AUTO_ID({StatPageSubDivider, .backgroundColor = COLOR_TRANSPARENT}) {
-            //             CLAY_TEXT(StatRacial1, CLAY_TEXT_CONFIG(StatPageTextConfig));
-            //         }
-            //         CLAY_AUTO_ID({StatPageSubDivider, .backgroundColor = COLOR_TRANSPARENT}) {
-            //             CLAY_TEXT(StatRacial2, CLAY_TEXT_CONFIG(StatPageTextConfig));
-            //         }
-            //         CLAY_AUTO_ID({StatPageSubDivider, .backgroundColor = COLOR_TRANSPARENT}) {
-            //             CLAY_TEXT(StatRacial3, CLAY_TEXT_CONFIG(StatPageTextConfig));
-            //         }
-            //     }; /* Write creature actions */
-            //     CLAY(CLAY_ID("ActionsContainer"), {StatPageDivider, .backgroundColor = COLOR_TRANSPARENT, .border = { .width = { .bottom = 5 }, .color = COLOR_BLACK }}) {
-            //         CLAY_AUTO_ID({StatPageSubDivider, .backgroundColor = COLOR_TRANSPARENT}) {
-            //             CLAY_TEXT(StatAction1, CLAY_TEXT_CONFIG(StatPageTextConfig));
-            //         }
-            //         CLAY_AUTO_ID({StatPageSubDivider, .backgroundColor = COLOR_TRANSPARENT}) {
-            //             CLAY_TEXT(StatAction2, CLAY_TEXT_CONFIG(StatPageTextConfig));
-            //         }
-            //         CLAY_AUTO_ID({StatPageSubDivider, .backgroundColor = COLOR_TRANSPARENT}) {
-            //             CLAY_TEXT(StatAction3, CLAY_TEXT_CONFIG(StatPageTextConfig));
-            //         }
-            //         CLAY_AUTO_ID({StatPageSubDivider, .backgroundColor = COLOR_TRANSPARENT}) {
-            //             CLAY_TEXT(StatAction4, CLAY_TEXT_CONFIG(StatPageTextConfig));
-            //         }
-            //     };
-            //     CLAY(CLAY_ID("LegendaryBonusContainer"), {StatPageDivider, .backgroundColor = COLOR_TRANSPARENT, .border = { .width = { .bottom = 5 }, .color = COLOR_BLACK }}) {
-            //         CLAY_TEXT(CLAY_STRING("Fill stats here"), CLAY_TEXT_CONFIG(StatPageTextConfig));
-            //     };
-            //     CLAY(CLAY_ID("LairReactionContainer"), {StatPageDivider, .backgroundColor = COLOR_TRANSPARENT, .border = { .width = { .bottom = 5 }, .color = COLOR_BLACK }}) {
-            //         CLAY_TEXT(CLAY_STRING("Fill stats here"), CLAY_TEXT_CONFIG(StatPageTextConfig));
-            //     };
-            //     CLAY(CLAY_ID("BonusVillainContainer"), {StatPageDivider, .backgroundColor = COLOR_TRANSPARENT, .border = { .width = { .bottom = 5 }, .color = COLOR_BLACK }}) {
-            //         CLAY_TEXT(CLAY_STRING("Fill stats here"), CLAY_TEXT_CONFIG(StatPageTextConfig));
-            //     };
-            //     CLAY(CLAY_ID("VillainContainer"), {StatPageDivider, .backgroundColor = COLOR_TRANSPARENT, .border = { .width = { .bottom = 5 }, .color = COLOR_BLACK }}) {
-            //         CLAY_TEXT(CLAY_STRING("Fill stats here"), CLAY_TEXT_CONFIG(StatPageTextConfig));
-            //     };
-            // };
         };
     };
 }
@@ -374,7 +262,7 @@ void PlayerDatabaseWindow(AppState * state) {
     };
 }
 
-void MakeCreatureHeader(int i) {
+void MakeCreatureHeader(int i, int CallingWindow) {
     CLAY(CLAY_IDI("CreatureHeader", i), {CreatureButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_SM_PX)}) {
         Clay_ElementId Id = CLAY_IDI("CreatureHeader", i);
         SDL_Log("%s", Id.stringId.chars);
@@ -400,7 +288,9 @@ void MakeCreatureHeader(int i) {
                 //CLAY_TEXT(CreatureSourceText, CLAY_TEXT_CONFIG(ButtonTextConfig));
             };
         };
-        Clay_OnHover(CallStatBlockCallback, (intptr_t)WindowState);
+        if (CREATURE_DB_SCREEN == CallingWindow) {
+            Clay_OnHover(CallStatBlockCallback, (intptr_t)WindowState);
+        }        
     };
 }
 // (WindowState = ADD_STAT_SCREEN) ? COLOR_ORANGE : COLOR_RED
