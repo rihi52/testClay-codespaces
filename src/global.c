@@ -47,11 +47,12 @@ void FocusWindowCallback(Clay_ElementId elementId, Clay_PointerData pointerData,
     if (pointerData.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME) {
         state->focusedId = CLAY_ID("0");
         state->focusedId = elementId;
+        SDL_Log("FocusCallback");
     }
 }
 
 void ReturnToMainScreenCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData) {
-    int check = (int) userData;
+    int * check = (int *) userData;
     if (pointerData.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME) {
         SDL_memset(TextBuffer, 0, sizeof(TextBuffer));
         ScrollOffset = 0;

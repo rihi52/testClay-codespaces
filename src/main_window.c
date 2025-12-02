@@ -417,21 +417,21 @@ void FillStats(void) {
 *--------------------------------------------------------------------------------------------*/
 
 static void StartEncounterButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData) {
-    int check = (int) userData;
+    int * check = (int *) userData;
     if (pointerData.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME) {
         WindowState = START_ENCOUNTER_SCREEN;
     }
 }
 
 static void BuildEncounterButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData) {
-    int check = (int) userData;
+    int * check = (int *) userData;
     if (pointerData.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME) {
         WindowState = BUILD_ENCOUNTER_SCREEN;
     }
 }
 
 static void CreatureDatabaseButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData) {
-    int check = (int) userData;
+    int * check = (int *) userData;
     /* TODO: how should this work? changes only on mouse movement after clicking */
     if (pointerData.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME) {
         FirstVisible = 0;
@@ -441,7 +441,7 @@ static void CreatureDatabaseButtonCallback(Clay_ElementId elementId, Clay_Pointe
 }
 
 static void PlayerDatabaseButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData) {
-    int check = (int) userData;
+    int * check = (int *) userData;
     /* TODO: how should this work? changes only on mouse movement after clicking */
     if (pointerData.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME) {
         WindowState = PLAYER_DB_SCREEN;
@@ -449,7 +449,7 @@ static void PlayerDatabaseButtonCallback(Clay_ElementId elementId, Clay_PointerD
 }
 
 static void CallStatBlockCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData) {
-    int check = (int) userData;
+    int * check = (int *) userData;
     if (pointerData.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME) {
         WindowState = ADD_STAT_SCREEN;
     }
