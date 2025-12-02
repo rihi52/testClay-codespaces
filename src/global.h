@@ -43,6 +43,7 @@ typedef struct {
 typedef struct app_state {
     SDL_Window *window;
     Clay_SDL3RendererData rendererData;
+    Clay_ElementId focusedId;
 } AppState;
 
 extern Clay_String StatName;
@@ -73,6 +74,7 @@ extern Clay_String StatAction2;
 extern Clay_String StatAction3;
 extern Clay_String StatAction4;
 
-void ReturnToMainScreenCallback(Clay_ElementId elementId, Clay_PointerData pointerData, intptr_t userData);
+void ReturnToMainScreenCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData);
+void FocusWindowCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void * userData);
 
 #endif /* GLOBAL_H */

@@ -16,11 +16,11 @@
  */
 
 
-static void StartEncounterButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, intptr_t userData);
-static void BuildEncounterButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, intptr_t userData);
-static void CreatureDatabaseButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, intptr_t userData);
-static void PlayerDatabaseButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, intptr_t userData);
-static void CallStatBlockCallback(Clay_ElementId elementId, Clay_PointerData pointerData, intptr_t userData);
+static void StartEncounterButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData);
+static void BuildEncounterButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData);
+static void CreatureDatabaseButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData);
+static void PlayerDatabaseButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData);
+static void CallStatBlockCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData);
 
 void CreatureDatabaseWindow(AppState * state);
 void PlayerDatabaseWindow(AppState * state);
@@ -59,32 +59,32 @@ Clay_RenderCommandArray MainWindow(AppState * state)
             /* Start button */
             CLAY(CLAY_ID("StartButton"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
                 CLAY_TEXT(CLAY_STRING("Start Encounter"), CLAY_TEXT_CONFIG(ButtonTextConfig));
-                Clay_OnHover(StartEncounterButtonCallback, (intptr_t)WindowState);
+                Clay_OnHover(StartEncounterButtonCallback, &WindowState);
             };
 
             /* Build button */
             CLAY(CLAY_ID("BuildButton"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
                 CLAY_TEXT(CLAY_STRING("Build Encounter"), CLAY_TEXT_CONFIG(ButtonTextConfig)); 
-                Clay_OnHover(BuildEncounterButtonCallback, (intptr_t)WindowState);
+                Clay_OnHover(BuildEncounterButtonCallback, &WindowState);
             };
 
             /* Creature DB button */
             CLAY(CLAY_ID("CreatureDatabaseButton"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
                 CLAY_TEXT(CLAY_STRING("Creature Database"), CLAY_TEXT_CONFIG(ButtonTextConfig));
-                Clay_OnHover(CreatureDatabaseButtonCallback, (intptr_t)WindowState);
+                Clay_OnHover(CreatureDatabaseButtonCallback, &WindowState);
             };
 
             /* Player DB button */ 
             CLAY(CLAY_ID("PlayerDatabaseButton"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
                 CLAY_TEXT(CLAY_STRING("Player Database"), CLAY_TEXT_CONFIG(ButtonTextConfig));
-                Clay_OnHover(PlayerDatabaseButtonCallback, (intptr_t)WindowState);
+                Clay_OnHover(PlayerDatabaseButtonCallback, &WindowState);
                 
             };
             break;
 
         case START_ENCOUNTER_SCREEN:
             CLAY(CLAY_ID("StartEncounterHeader"), { HeadLabelWindow,.cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX), .backgroundColor = COLOR_BLUE}) {
-                Clay_OnHover(ReturnToMainScreenCallback, (intptr_t)WindowState);
+                Clay_OnHover(ReturnToMainScreenCallback, &WindowState);
             };
             break;
         
@@ -129,7 +129,7 @@ void CreatureDatabaseWindow(AppState * state) {
             CLAY(CLAY_ID("SidebarTop"), {SidebarTopLayoutConfig, .backgroundColor = COLOR_TRANSPARENT, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX) }) {
 
                 CLAY(CLAY_ID("CreatureDBHomeButton"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
-                    Clay_OnHover(ReturnToMainScreenCallback, (intptr_t)WindowState);
+                    Clay_OnHover(ReturnToMainScreenCallback, &WindowState);
                     CLAY_TEXT(CLAY_STRING("Return Home"), CLAY_TEXT_CONFIG(ButtonTextConfig));
                 };
                 CLAY(CLAY_ID("CreatureDBAddButton"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
@@ -162,7 +162,7 @@ void CreatureDatabaseWindow(AppState * state) {
                 };
 
                 CLAY(CLAY_ID("CreatureDBSearchButton"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
-                    // Clay_OnHover(ReturnToMainScreenCallback, (intptr_t)WindowState); TODO: Fill this in with a sql search function
+                    // Clay_OnHover(ReturnToMainScreenCallback, &WindowState); TODO: Fill this in with a sql search function
                     CLAY_TEXT(CLAY_STRING("Search"), CLAY_TEXT_CONFIG(ButtonTextConfig));
                 };                
             };
@@ -205,7 +205,7 @@ void PlayerDatabaseWindow(AppState * state) {
             CLAY(CLAY_ID("SidebarTop"), {SidebarTopLayoutConfig, .backgroundColor = COLOR_TRANSPARENT, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX) }) {
 
                 CLAY(CLAY_ID("PlayerDBHomeButton"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
-                    Clay_OnHover(ReturnToMainScreenCallback, (intptr_t)WindowState);
+                    Clay_OnHover(ReturnToMainScreenCallback, &WindowState);
                     CLAY_TEXT(CLAY_STRING("Return Home"), CLAY_TEXT_CONFIG(ButtonTextConfig));
                 };
                 CLAY(CLAY_ID("PlayerDBAddButton"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
@@ -239,7 +239,7 @@ void PlayerDatabaseWindow(AppState * state) {
                 };
 
                 CLAY(CLAY_ID("PlayerDBSearchButton"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
-                    // Clay_OnHover(ReturnToMainScreenCallback, (intptr_t)WindowState); TODO: Fill this in with a sql search function
+                    // Clay_OnHover(ReturnToMainScreenCallback, &WindowState); TODO: Fill this in with a sql search function
                     CLAY_TEXT(CLAY_STRING("Search"), CLAY_TEXT_CONFIG(ButtonTextConfig));
                 };                
             };
@@ -273,10 +273,10 @@ void MakeCreatureHeader(int i, int CallingWindow) {
 
         CLAY_AUTO_ID({SizeCRContainerLayoutConfig}) {
             /* change to be just size and type */
-            CLAY_AUTO_ID({CRContainerLayoutConfig}){
+            CLAY_AUTO_ID({CRContainerLayoutConfig}) {
                 // CLAY_TEXT(DBPageHeaders[i].CreatureCR, CLAY_TEXT_CONFIG(ButtonTextConfig));
             };
-            CLAY_AUTO_ID({SizeContainerLayoutConfig}){
+            CLAY_AUTO_ID({SizeContainerLayoutConfig}) {
                 // CLAY_TEXT(DBPageHeaders[i].CreatureSize, CLAY_TEXT_CONFIG(ButtonTextConfig));
             };
         };
@@ -289,7 +289,7 @@ void MakeCreatureHeader(int i, int CallingWindow) {
             };
         };
         if (CREATURE_DB_SCREEN == CallingWindow) {
-            Clay_OnHover(CallStatBlockCallback, (intptr_t)WindowState);
+            Clay_OnHover(CallStatBlockCallback, &WindowState);
         }        
     };
 }
@@ -416,21 +416,21 @@ void FillStats(void) {
 *                                    Button Callbacks                                        *
 *--------------------------------------------------------------------------------------------*/
 
-static void StartEncounterButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, intptr_t userData) {
+static void StartEncounterButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData) {
     int check = (int) userData;
     if (pointerData.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME) {
         WindowState = START_ENCOUNTER_SCREEN;
     }
 }
 
-static void BuildEncounterButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, intptr_t userData) {
+static void BuildEncounterButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData) {
     int check = (int) userData;
     if (pointerData.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME) {
         WindowState = BUILD_ENCOUNTER_SCREEN;
     }
 }
 
-static void CreatureDatabaseButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, intptr_t userData) {
+static void CreatureDatabaseButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData) {
     int check = (int) userData;
     /* TODO: how should this work? changes only on mouse movement after clicking */
     if (pointerData.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME) {
@@ -440,7 +440,7 @@ static void CreatureDatabaseButtonCallback(Clay_ElementId elementId, Clay_Pointe
     }
 }
 
-static void PlayerDatabaseButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, intptr_t userData) {
+static void PlayerDatabaseButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData) {
     int check = (int) userData;
     /* TODO: how should this work? changes only on mouse movement after clicking */
     if (pointerData.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME) {
@@ -448,7 +448,7 @@ static void PlayerDatabaseButtonCallback(Clay_ElementId elementId, Clay_PointerD
     }
 }
 
-static void CallStatBlockCallback(Clay_ElementId elementId, Clay_PointerData pointerData, intptr_t userData) {
+static void CallStatBlockCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData) {
     int check = (int) userData;
     if (pointerData.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME) {
         WindowState = ADD_STAT_SCREEN;

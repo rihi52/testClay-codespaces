@@ -9,6 +9,8 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_keyboard.h>
 
+void BuildEncounterChain();
+
 void BuildEncounterWindow(AppState * state) {
     CLAY(CLAY_ID("BuildWindowOuterContainer"), {LTRParentWindowLayoutConfig, .backgroundColor = COLOR_BLACK, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)} ) {
         
@@ -23,7 +25,7 @@ void BuildEncounterWindow(AppState * state) {
             }) {
 
                 CLAY(CLAY_ID("PlayerOne"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
-                    Clay_OnHover(ReturnToMainScreenCallback, (intptr_t)WindowState);
+                    Clay_OnHover(ReturnToMainScreenCallback, &WindowState);
                     CLAY_TEXT(CLAY_STRING("Finn"), CLAY_TEXT_CONFIG(ButtonTextConfig));
                 };
                 CLAY(CLAY_ID("PlayerTwo"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
@@ -38,12 +40,26 @@ void BuildEncounterWindow(AppState * state) {
             };
             
             CLAY(CLAY_ID("PlayerSidebarBottom"), SidebarBottomLayoutConfig) {
-                /* Create char* and set equal to the overall buffer that reads keyboard input */
-                    char * SearchText = &TextBuffer[0];
-                    /* Custom clay_string to allow for a dynamically changing char* */
-                    Clay_String SomeTextMaybe = {.isStaticallyAllocated = true, .length = SDL_strlen(SearchText), .chars = SearchText};
-                    /* Using dynamically changing char * SearchText */
-                    CLAY_TEXT(SomeTextMaybe, CLAY_TEXT_CONFIG(InputTextConfig));
+                CLAY(CLAY_ID("PlayerSearchTextBox"), {
+                    SingleLineInputLayoutConfig,
+                    .backgroundColor = COLOR_GRAY_BG,
+                    .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_SM_PX),
+                    .border = {
+                        .width = CLAY_BORDER_ALL(INPUT_BORDER_WIDTH_PX),
+                        .color = COLOR_WHITE
+                    }
+                }){
+                    Clay_OnHover(FocusWindowCallback, &state);
+                    // Clay_ElementId = CLAY_ID()
+                    /* Create char* and set equal to the overall buffer that reads keyboard input */
+                    if (state->focusedId.id == CLAY_ID("PlayerSearchTextBox").id) {
+                        char * SearchText = &TextBuffer[0];
+                        /* Custom clay_string to allow for a dynamically changing char* */
+                        Clay_String SomeTextMaybe = {.isStaticallyAllocated = true, .length = SDL_strlen(SearchText), .chars = SearchText};
+                        /* Using dynamically changing char * SearchText */
+                        CLAY_TEXT(SomeTextMaybe, CLAY_TEXT_CONFIG(InputTextConfig));
+                    }                    
+                }
 
                 CLAY(CLAY_ID("BuildPlayerSearchButton"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
                     // Clay_OnHover(ReturnToMainScreenCallback, (intptr_t)WindowState); TODO: Fill this in with a sql search function
@@ -58,11 +74,11 @@ void BuildEncounterWindow(AppState * state) {
 
         /* Main content containing monster lists and stats*/
         CLAY(CLAY_ID("BuildEncounterContentWindow"), {
-            LTRParentWindowLayoutConfig,
+            TTBBuildWindowLayoutConfig,
             .backgroundColor = COLOR_GRAY_BG,
             .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)
         }) {
-
+            BuildEncounterChain();
         };
         CLAY(CLAY_ID("BuildEncounterCreatureSidebar"), SidebarLayoutConfig) {
             
@@ -77,12 +93,25 @@ void BuildEncounterWindow(AppState * state) {
             };
             
             CLAY(CLAY_ID("CreatureSidebarBottom"), SidebarBottomLayoutConfig) {
-                /* Create char* and set equal to the overall buffer that reads keyboard input */
-                    char * SearchText = &TextBuffer[0];
-                    /* Custom clay_string to allow for a dynamically changing char* */
-                    Clay_String SomeTextMaybe = {.isStaticallyAllocated = true, .length = SDL_strlen(SearchText), .chars = SearchText};
-                    /* Using dynamically changing char * SearchText */
-                    CLAY_TEXT(SomeTextMaybe, CLAY_TEXT_CONFIG(InputTextConfig));
+                CLAY(CLAY_ID("CreatureSearchTextBox"), {
+                    SingleLineInputLayoutConfig,
+                    .backgroundColor = COLOR_GRAY_BG,
+                    .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_SM_PX),
+                    .border = {
+                        .width = CLAY_BORDER_ALL(INPUT_BORDER_WIDTH_PX),
+                        .color = COLOR_WHITE
+                    }
+                }){
+                    Clay_OnHover(FocusWindowCallback, &state);
+                    if (state->focusedId.id == CLAY_ID("CreatureSearchTextBox").id) {
+                        /* Create char* and set equal to the overall buffer that reads keyboard input */
+                        char * SearchText = &TextBuffer[0];
+                        /* Custom clay_string to allow for a dynamically changing char* */
+                        Clay_String SomeTextMaybe = {.isStaticallyAllocated = true, .length = SDL_strlen(SearchText), .chars = SearchText};
+                        /* Using dynamically changing char * SearchText */
+                        CLAY_TEXT(SomeTextMaybe, CLAY_TEXT_CONFIG(InputTextConfig));
+                    }
+                }
 
                 CLAY(CLAY_ID("BuildCreatureSearchButton"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
                     // Clay_OnHover(ReturnToMainScreenCallback, (intptr_t)WindowState); TODO: Fill this in with a sql search function
@@ -95,4 +124,14 @@ void BuildEncounterWindow(AppState * state) {
             };
         };
     };
+}
+
+void BuildEncounterChain() {
+    CLAY_AUTO_ID({
+        BuildWindowRow,
+        .backgroundColor = COLOR_GREEN,
+        .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)
+    }){
+
+    }
 }

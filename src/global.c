@@ -42,7 +42,15 @@ Clay_String StatAction2 = {0};
 Clay_String StatAction3 = {0};
 Clay_String StatAction4 = {0};
 
-void ReturnToMainScreenCallback(Clay_ElementId elementId, Clay_PointerData pointerData, intptr_t userData) {
+void FocusWindowCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void * userData) {
+    AppState *state = userData;
+    if (pointerData.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME) {
+        state->focusedId = CLAY_ID("0");
+        state->focusedId = elementId;
+    }
+}
+
+void ReturnToMainScreenCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData) {
     int check = (int) userData;
     if (pointerData.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME) {
         SDL_memset(TextBuffer, 0, sizeof(TextBuffer));

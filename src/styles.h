@@ -58,6 +58,9 @@ extern Clay_LayoutConfig TypeContainerLayoutConfig;
 /**/
 extern Clay_LayoutConfig SourceContainerLayoutConfig;
 
+extern Clay_LayoutConfig BuildWindowRow;
+extern Clay_LayoutConfig TTBBuildWindowLayoutConfig;
+
 /* Colors */
 extern const Clay_Color COLOR_ORANGE;
 extern const Clay_Color COLOR_BLUE;

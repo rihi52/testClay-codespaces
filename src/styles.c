@@ -62,6 +62,14 @@ Clay_LayoutConfig TTBParentWindowLayoutConfig = {
     .layoutDirection = CLAY_TOP_TO_BOTTOM
 };
 
+Clay_LayoutConfig TTBBuildWindowLayoutConfig = {
+    .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
+    .padding = { 0, 0, 0, 0},
+    .childGap = 8,
+    .childAlignment =  { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_TOP },
+    .layoutDirection = CLAY_TOP_TO_BOTTOM
+};
+
 Clay_LayoutConfig LTRParentWindowLayoutConfig = {
     .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
     .padding = { 0, 0, 0, 0},
@@ -192,6 +200,14 @@ Clay_LayoutConfig StatPageSubDivider = {
 
 Clay_LayoutConfig StatPageAbilityDivider = {
     .sizing = { CLAY_SIZING_FIXED(80), CLAY_SIZING_FIT(0) },
+    .padding = { 4, 4, 4, 4},
+    .childGap = 0,
+    .childAlignment =  { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER},
+    .layoutDirection = CLAY_LEFT_TO_RIGHT
+};
+
+Clay_LayoutConfig BuildWindowRow = {
+    .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_FIXED(100) },
     .padding = { 4, 4, 4, 4},
     .childGap = 0,
     .childAlignment =  { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER},
