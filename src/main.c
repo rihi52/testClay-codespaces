@@ -94,7 +94,8 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
         return SDL_APP_FAILURE;
     }
     *appstate = state;
-    state->focusedId = CLAY_ID("0");
+    SDL_Log("Init Called");
+    state->focusedId = CLAY_ID("NULL");
 
     if (!SDL_CreateWindowAndRenderer("GUIDNBATTER", 1280, 720, SDL_WINDOW_RESIZABLE, &state->window, &state->rendererData.renderer)) {
         SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Failed to create window and renderer: %s", SDL_GetError());

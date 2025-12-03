@@ -49,10 +49,14 @@ void BuildEncounterWindow(AppState * state) {
                         .color = COLOR_WHITE
                     }
                 }){
-                    Clay_OnHover(FocusWindowCallback, &state);
+                    Clay_OnHover(FocusWindowCallback, state);
                     // Clay_ElementId = CLAY_ID()
                     /* Create char* and set equal to the overall buffer that reads keyboard input */
+                    //SDL_Log("PlayerSearchTextBox ID: %d", CLAY_ID("PlayerSearchTextBox").id);
+                    SDL_Log("Build player State: %d", state->focusedId.id);
                     if (state->focusedId.id == CLAY_ID("PlayerSearchTextBox").id) {
+                        
+                        SDL_Log("Focused text update");
                         char * SearchText = &TextBuffer[0];
                         /* Custom clay_string to allow for a dynamically changing char* */
                         Clay_String SomeTextMaybe = {.isStaticallyAllocated = true, .length = SDL_strlen(SearchText), .chars = SearchText};
@@ -87,22 +91,23 @@ void BuildEncounterWindow(AppState * state) {
                 .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX),
                 .clip = {true, true, Clay_GetScrollOffset()}
             }) /* Build Creature Sidebar Top contents*/ {
-                for (int i = 0; i < 30; i++) {
-                    MakeCreatureHeader(i, BUILD_ENCOUNTER_SCREEN);
-                }
+                // for (int i = 0; i < 30; i++) {
+                //     MakeCreatureHeader(i, BUILD_ENCOUNTER_SCREEN);
+                // }
             };
             
             CLAY(CLAY_ID("CreatureSidebarBottom"), SidebarBottomLayoutConfig) {
                 CLAY(CLAY_ID("CreatureSearchTextBox"), {
                     SingleLineInputLayoutConfig,
-                    .backgroundColor = COLOR_GRAY_BG,
+                    .backgroundColor = (state->focusedId.id == CLAY_ID("CreatureSearchTextBox").id) ? COLOR_BLACK : COLOR_GRAY_BG,
                     .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_SM_PX),
                     .border = {
                         .width = CLAY_BORDER_ALL(INPUT_BORDER_WIDTH_PX),
                         .color = COLOR_WHITE
                     }
                 }){
-                    Clay_OnHover(FocusWindowCallback, &state);
+                    Clay_OnHover(FocusWindowCallback, state);
+                    SDL_Log("Build creature State: %d", state->focusedId.id);
                     if (state->focusedId.id == CLAY_ID("CreatureSearchTextBox").id) {
                         /* Create char* and set equal to the overall buffer that reads keyboard input */
                         char * SearchText = &TextBuffer[0];

@@ -70,6 +70,7 @@ extern const Clay_Color COLOR_RED;
 extern const Clay_Color COLOR_GREEN;
 extern const Clay_Color COLOR_WHITE;
 extern const Clay_Color COLOR_GRAY_BG;
+extern const Clay_Color COLOR_GRAY_SELECT;
 extern const Clay_Color COLOR_BUTTON_GRAY;
 extern const Clay_Color COLOR_TRANSPARENT;
 

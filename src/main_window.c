@@ -186,9 +186,9 @@ void CreatureDatabaseWindow(AppState * state) {
                                                         .clip = {true, true, Clay_GetScrollOffset()}
             }) {
 
-                for (int i = 0; i < 30; i++) {
-                    MakeCreatureHeader(i, CREATURE_DB_SCREEN);
-                }
+                // for (int i = 0; i < 30; i++) {
+                //     MakeCreatureHeader(i, CREATURE_DB_SCREEN);
+                // }
             }
             FillStats();
         };

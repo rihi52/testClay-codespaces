@@ -13,7 +13,8 @@ const Clay_Color COLOR_BLACK        = (Clay_Color) {0, 0, 0, 255};
 const Clay_Color COLOR_RED          = (Clay_Color) {220, 0, 0, 255};
 const Clay_Color COLOR_GREEN        = (Clay_Color) {0, 220, 0, 255};
 const Clay_Color COLOR_WHITE        = (Clay_Color) { 255, 255, 255, 255};
-const Clay_Color COLOR_GRAY_BG      = (Clay_Color) {20, 20, 20, 255};
+const Clay_Color COLOR_GRAY_BG      = (Clay_Color) {30, 30, 30, 255};
+const Clay_Color COLOR_GRAY_SELECT  = (Clay_Color) {40, 40, 40, 255};
 const Clay_Color COLOR_TRANSPARENT  = (Clay_Color) {0, 0, 0, 0};
 const Clay_Color COLOR_BUTTON_GRAY  = (Clay_Color) {70, 70, 70, 255};
 
