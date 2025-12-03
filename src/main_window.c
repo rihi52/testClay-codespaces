@@ -181,7 +181,7 @@ void CreatureDatabaseWindow(AppState * state) {
             /* Container for Creature Header Information */
             // TODO: Make scrollable
             CLAY(CLAY_ID("CreatureHeaderContainer"), {  CreatureButtonContainerLayoutConfig,
-                                                        .backgroundColor = COLOR_TRANSPARENT,
+                                                        .backgroundColor = COLOR_GRAY_BG,
                                                         .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX),
                                                         .clip = {true, true, Clay_GetScrollOffset()}
             }) {
@@ -221,21 +221,22 @@ void PlayerDatabaseWindow(AppState * state) {
             
             CLAY(CLAY_ID("SidebarBottom"), SidebarBottomLayoutConfig) {
                 CLAY(CLAY_ID("PlayerTextBox"), {
-                                                    SingleLineInputLayoutConfig,
-                                                    .backgroundColor = COLOR_GRAY_BG,
-                                                    .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_SM_PX),
-                                                    .border = {
-                                                                .width = CLAY_BORDER_ALL(INPUT_BORDER_WIDTH_PX),
-                                                                .color = COLOR_WHITE
-                                                            }
-                                                }){
-
-                    /* Create char* and set equal to the overall buffer that reads keyboard input */
-                    char * SearchText = &TextBuffer[0];
-                    /* Custom clay_string to allow for a dynamically changing char* */
-                    Clay_String SomeTextMaybe = {.isStaticallyAllocated = true, .length = SDL_strlen(SearchText), .chars = SearchText};
-                    /* Using dynamically changing char * SearchText */
-                    CLAY_TEXT(SomeTextMaybe, CLAY_TEXT_CONFIG(InputTextConfig));       
+                    SingleLineInputLayoutConfig,
+                    .backgroundColor = (state->focusedId.id == CLAY_ID("PlayerTextBox").id) ? COLOR_BLACK : COLOR_GRAY_BG,
+                    .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_SM_PX),
+                    .border = {
+                                .width = CLAY_BORDER_ALL(INPUT_BORDER_WIDTH_PX),
+                                .color = COLOR_WHITE
+                            }
+                }){
+                    Clay_OnHover(FocusWindowCallback, state);
+                    if (state->focusedId.id == CLAY_ID("PlayerTextBox").id) {
+                        char * SearchText = &TextBuffer[0];
+                        /* Custom clay_string to allow for a dynamically changing char* */
+                        Clay_String SomeTextMaybe = {.isStaticallyAllocated = true, .length = SDL_strlen(SearchText), .chars = SearchText};
+                        /* Using dynamically changing char * SearchText */
+                        CLAY_TEXT(SomeTextMaybe, CLAY_TEXT_CONFIG(InputTextConfig));
+                    }       
                 };
 
                 CLAY(CLAY_ID("PlayerDBSearchButton"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
@@ -293,7 +294,7 @@ void MakeCreatureHeader(int i, int CallingWindow) {
         }        
     };
 }
-// (WindowState = ADD_STAT_SCREEN) ? COLOR_ORANGE : COLOR_RED
+
 void FillStats(void) {
     CLAY(CLAY_ID("StatPage"), {StatPageContainer, .backgroundColor = COLOR_RED, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX), .clip = {false, true, Clay_GetScrollOffset()}}) {
         // TODO: need a bunch of elements to format the stat page and fill them with a bunch of CLAY_STRINGS

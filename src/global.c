@@ -45,9 +45,8 @@ Clay_String StatAction4 = {0};
 void FocusWindowCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void * userData) {
     AppState *state = userData;
     if (pointerData.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME) {
-        //state->focusedId = CLAY_ID("NULL");
+        state->focusedId = CLAY_ID("NULL");
         state->focusedId = elementId;
-        SDL_Log("Callback State: %d", state->focusedId.id);
         SDL_Log("FocusCallback");
     }
 }

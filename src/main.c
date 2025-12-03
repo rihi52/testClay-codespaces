@@ -94,7 +94,6 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
         return SDL_APP_FAILURE;
     }
     *appstate = state;
-    SDL_Log("Init Called");
     state->focusedId = CLAY_ID("NULL");
 
     if (!SDL_CreateWindowAndRenderer("GUIDNBATTER", 1280, 720, SDL_WINDOW_RESIZABLE, &state->window, &state->rendererData.renderer)) {
