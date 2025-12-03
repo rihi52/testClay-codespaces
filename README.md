@@ -4,9 +4,11 @@ A grapical version of [clidnbatter](https://github.com/rihi52/clidnbatter) using
 
 This space is a copy of https://github.com/rihi52/myClayoutTesting that is built for the web using emscripten.
 
-![image](https://github.com/rihi52/testClay-codespaces/tree/main/assets/home.png)
+https://github.com/rihi52/myClayoutTesting is hooked up to a sql database containing the monsters provided by the D&D 5e SRD. This project is not hooked up to the database and is purely to be able to code and test UI elements in the browser without affecting the main project in anyway. 
 
-![image](https://github.com/rihi52/testClay-codespaces/tree/main/assets/db.png)
+![image](https://github.com/rihi52/testClay-codespaces/blob/main/assets/home.png)
+
+![image](https://github.com/rihi52/testClay-codespaces/blob/main/assets/db.png)
 
 
 
