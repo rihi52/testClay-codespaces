@@ -4,13 +4,15 @@
 #include "clay.h"
 #include "global.h"
 
+#define BUILD_LIST_MAX  50
+
 typedef struct participant {
     char *name;
     int initiative;
     int initiativeSpot;
     int hp;
     bool isMalloc;
-    struct part *next;
+    struct participant *next;
 }participant;
 
 void BuildEncounterWindow(AppState * state);

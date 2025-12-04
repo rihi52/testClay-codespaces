@@ -5,15 +5,19 @@
 #include "text_input.h"
 #include "db_query.h"
 #include "main_window.h"
+#include "build_encounter.h"
 
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_keyboard.h>
 
+char *BuildList[BUILD_LIST_MAX] = {0};
+
 void BuildEncounterChain();
+void PlayerBuildListCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData);
+void AddToBuildChain(const char *ParticipantToAdd);
 
 void BuildEncounterWindow(AppState * state) {
     CLAY(CLAY_ID("BuildWindowOuterContainer"), {LTRParentWindowLayoutConfig, .backgroundColor = COLOR_BLACK, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)} ) {
-        
         /* Sidebar for option buttons */
         CLAY(CLAY_ID("BuildEncounterSidebar"), {
             SidebarLayoutConfig,
@@ -33,6 +37,10 @@ void BuildEncounterWindow(AppState * state) {
                     CLAY_TEXT(CLAY_STRING("Finn"), CLAY_TEXT_CONFIG(ButtonTextConfig));
                 };
                 CLAY(CLAY_ID("PlayerTwo"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
+                    char *name = "Ravi";
+                    Clay_String RaviName = { false, sizeof(name), "Ravi"};
+                    SDL_Log("%s", RaviName.chars);
+                    Clay_OnHover(PlayerBuildListCallback, &RaviName.chars );
                     CLAY_TEXT(CLAY_STRING("Ravi"), CLAY_TEXT_CONFIG(ButtonTextConfig));
                 };
                 CLAY(CLAY_ID("PlayerThree"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
@@ -57,7 +65,7 @@ void BuildEncounterWindow(AppState * state) {
                     if (state->focusedId.id == CLAY_ID("PlayerSearchTextBox").id) {
                         /* Using dynamically changing char * SearchText */
                         CLAY_TEXT(TypedText, CLAY_TEXT_CONFIG(InputTextConfig));
-                    }                    
+                    }
                 }
 
                 CLAY(CLAY_ID("BuildPlayerSearchButton"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
@@ -106,7 +114,6 @@ void BuildEncounterWindow(AppState * state) {
                     }
                 }){
                     Clay_OnHover(FocusWindowCallback, state);
-                    SDL_Log("Build creature State: %d", state->focusedId.id);
                     if (state->focusedId.id == CLAY_ID("CreatureSearchTextBox").id) {
                         /* Using dynamically changing char * SearchText */
                         CLAY_TEXT(TypedText, CLAY_TEXT_CONFIG(InputTextConfig));
@@ -133,5 +140,23 @@ void BuildEncounterChain() {
         .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)
     }){
 
+    }
+}
+
+void AddToBuildChain(const char *ParticipantToAdd) {
+    for (int i = 0; i < BUILD_LIST_MAX; i++) {
+        if (NULL == BuildList[i]) {
+            SDL_strlcpy(BuildList[i], ParticipantToAdd, sizeof(ParticipantToAdd));
+            SDL_Log("Added: %s", ParticipantToAdd);
+            break;
+        }
+    }    
+}
+
+void PlayerBuildListCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData) {
+    if (pointerData.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME) {
+        char *NameToAdd = (char *) userData;
+        SDL_Log("Callback: %s", NameToAdd);
+        AddToBuildChain(NameToAdd);
     }
 }
