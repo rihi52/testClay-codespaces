@@ -19,10 +19,14 @@
 #define PLAYER_DB_SCREEN        4
 #define ADD_STAT_SCREEN         5
 
+#define BACKSPACE_KEY           8
+
 #define MAX_TEXT 256
 extern char TextBuffer[MAX_TEXT];
 
 //char textBuffer[MAX_TEXT] = {0};
+
+extern bool MouseDown;
 
 extern int WindowState;
 
@@ -45,6 +49,8 @@ typedef struct app_state {
     Clay_SDL3RendererData rendererData;
     Clay_ElementId focusedId;
 } AppState;
+
+extern Clay_String TypedText;
 
 extern Clay_String StatName;
 extern Clay_String StatSize;

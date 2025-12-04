@@ -14,6 +14,10 @@ uint16_t TotalCreatures = 0;
 
 float ScrollOffset = 0;
 
+bool MouseDown;
+
+Clay_String TypedText = {0};
+
 Clay_String StatName = {0};
 Clay_String StatSize = {0};
 Clay_String StatType = {0};

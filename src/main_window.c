@@ -153,12 +153,8 @@ void CreatureDatabaseWindow(AppState * state) {
                         .color = COLOR_WHITE
                     }
                 }){
-                    /* Create char* and set equal to the overall buffer that reads keyboard input */
-                    char * SearchText = &TextBuffer[0];
-                    /* Custom clay_string to allow for a dynamically changing char* */
-                    Clay_String SomeTextMaybe = {.isStaticallyAllocated = true, .length = SDL_strlen(SearchText), .chars = SearchText};
                     /* Using dynamically changing char * SearchText */
-                    CLAY_TEXT(SomeTextMaybe, CLAY_TEXT_CONFIG(InputTextConfig));
+                    CLAY_TEXT(TypedText, CLAY_TEXT_CONFIG(InputTextConfig));
                 };
 
                 CLAY(CLAY_ID("CreatureDBSearchButton"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {

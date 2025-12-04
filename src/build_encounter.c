@@ -55,12 +55,8 @@ void BuildEncounterWindow(AppState * state) {
                 }){
                     Clay_OnHover(FocusWindowCallback, state);
                     if (state->focusedId.id == CLAY_ID("PlayerSearchTextBox").id) {
-                        
-                        char * SearchText = &TextBuffer[0];
-                        /* Custom clay_string to allow for a dynamically changing char* */
-                        Clay_String SomeTextMaybe = {.isStaticallyAllocated = true, .length = SDL_strlen(SearchText), .chars = SearchText};
                         /* Using dynamically changing char * SearchText */
-                        CLAY_TEXT(SomeTextMaybe, CLAY_TEXT_CONFIG(InputTextConfig));
+                        CLAY_TEXT(TypedText, CLAY_TEXT_CONFIG(InputTextConfig));
                     }                    
                 }
 
@@ -112,12 +108,8 @@ void BuildEncounterWindow(AppState * state) {
                     Clay_OnHover(FocusWindowCallback, state);
                     SDL_Log("Build creature State: %d", state->focusedId.id);
                     if (state->focusedId.id == CLAY_ID("CreatureSearchTextBox").id) {
-                        /* Create char* and set equal to the overall buffer that reads keyboard input */
-                        char * SearchText = &TextBuffer[0];
-                        /* Custom clay_string to allow for a dynamically changing char* */
-                        Clay_String SomeTextMaybe = {.isStaticallyAllocated = true, .length = SDL_strlen(SearchText), .chars = SearchText};
                         /* Using dynamically changing char * SearchText */
-                        CLAY_TEXT(SomeTextMaybe, CLAY_TEXT_CONFIG(InputTextConfig));
+                        CLAY_TEXT(TypedText, CLAY_TEXT_CONFIG(InputTextConfig));
                     }
                 }
 

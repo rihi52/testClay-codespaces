@@ -89,6 +89,11 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     StatAction3 = MakeClayString("Tail. Melee Weapon Attack: +9 to hit, reach 10 ft., one target. Hit: 15 (3d6 + 5) bludgeoning damage.");
     StatAction4 = MakeClayString("Enslave (3/Day). The aboleth targets one creature it can see within 30 feet of it. The target must succeed on a DC 14 Wisdom saving throw or be magically charmed by the aboleth until the aboleth dies or until it is on a different plane of existence from the target. The charmed target is under the aboleth's control and can't take reactions, and the aboleth and the target can communicate telepathically with each other over any distance. Whenever the charmed target takes damage, the target can repeat the saving throw. On a success, the effect ends. No more than once every 24 hours, the target can also repeat the saving throw when it is at least 1 mile away from the aboleth.");
 
+    TypedText.isStaticallyAllocated = true;
+    TypedText.chars = TextBuffer;
+    TypedText.length = 0;
+    MouseDown = false;
+
     AppState *state = SDL_calloc(1, sizeof(AppState));
     if (!state) {
         return SDL_APP_FAILURE;
@@ -165,11 +170,15 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
         case SDL_EVENT_TEXT_INPUT:
             SDL_Log("%s",event->text.text);
             SDL_strlcat(TextBuffer,event->text.text, MAX_TEXT);
+            TypedText.length = SDL_strlen(TextBuffer);
             SDL_Log("%s", TextBuffer);
             break;
         case SDL_EVENT_KEY_DOWN:
-            // SDL_Log("key pressed");
-            // SDL_Log("%d",event->key.key);
+            // Handle backspace
+            if (BACKSPACE_KEY == event->key.key) {
+                ModifyTypedString();
+            }
+            // 127 = delete
             break;
         case SDL_EVENT_WINDOW_RESIZED:
             Clay_SetLayoutDimensions((Clay_Dimensions) { (float) event->window.data1, (float) event->window.data2 });
