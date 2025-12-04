@@ -146,15 +146,18 @@ void CreatureDatabaseWindow(AppState * state) {
             CLAY(CLAY_ID("SidebarBottom"), SidebarBottomLayoutConfig ) {
                 CLAY(CLAY_ID("CreatureTextBox"), {
                     SingleLineInputLayoutConfig,
-                    .backgroundColor = COLOR_GRAY_BG,
+                    .backgroundColor = (state->focusedId.id == CLAY_ID("CreatureTextBox").id) ? COLOR_BLACK : COLOR_GRAY_BG,
                     .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_SM_PX),
                     .border = {
                         .width = CLAY_BORDER_ALL(INPUT_BORDER_WIDTH_PX),
                         .color = COLOR_WHITE
                     }
                 }){
-                    /* Using dynamically changing char * SearchText */
-                    CLAY_TEXT(TypedText, CLAY_TEXT_CONFIG(InputTextConfig));
+                    Clay_OnHover(FocusWindowCallback, state);
+                    if (state->focusedId.id == CLAY_ID("CreatureTextBox").id) {
+                        /* Using dynamically changing char * SearchText */
+                        CLAY_TEXT(TypedText, CLAY_TEXT_CONFIG(InputTextConfig));
+                    }
                 };
 
                 CLAY(CLAY_ID("CreatureDBSearchButton"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
