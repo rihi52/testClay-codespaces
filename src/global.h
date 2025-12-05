@@ -24,6 +24,8 @@
 #define MAX_TEXT 256
 extern char TextBuffer[MAX_TEXT];
 
+extern AppState *gAppState;
+
 //char textBuffer[MAX_TEXT] = {0};
 
 extern bool MouseDown;
