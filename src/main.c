@@ -258,12 +258,12 @@ void SDL_AppQuit(void *appstate, SDL_AppResult result)
         SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Application failed to run");
     }
 
-    DatabaseClose();
-    for (int i = 1; i < MAX_DB_COUNT; i++) {
-        if (!DBPageHeaders[i].CreatureName.isStaticallyAllocated && DBPageHeaders[i].CreatureName.chars != NULL) {
-            free((void *)DBPageHeaders[i].CreatureName.chars);
-        }
-    }
+    // DatabaseClose();
+    // for (int i = 1; i < MAX_DB_COUNT; i++) {
+    //     if (!DBPageHeaders[i].CreatureName.isStaticallyAllocated && DBPageHeaders[i].CreatureName.chars != NULL) {
+    //         free((void *)DBPageHeaders[i].CreatureName.chars);
+    //     }
+    // }
 
     SDL_StopTextInput(gAppState->window);
 

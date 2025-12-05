@@ -24,8 +24,6 @@
 #define MAX_TEXT 256
 extern char TextBuffer[MAX_TEXT];
 
-extern AppState *gAppState;
-
 //char textBuffer[MAX_TEXT] = {0};
 
 extern bool MouseDown;
@@ -51,6 +49,8 @@ typedef struct app_state {
     Clay_SDL3RendererData rendererData;
     Clay_ElementId focusedId;
 } AppState;
+
+extern AppState *gAppState;
 
 extern Clay_String TypedText;
 

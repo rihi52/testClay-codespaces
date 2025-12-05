@@ -71,10 +71,10 @@ void BuildEncounterWindow(AppState * state) {
                     // Clay_OnHover(ReturnToMainScreenCallback, (intptr_t)WindowState); TODO: Fill this in with a sql search function
                     CLAY_TEXT(CLAY_STRING("Search"), CLAY_TEXT_CONFIG(ButtonTextConfig));
                 }; 
-                CLAY(CLAY_ID("BuildEncounterAddButton"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
-                    // Clay_OnHover(ReturnToMainScreenCallback, (intptr_t)WindowState); TODO: Fill this in with a sql search function
-                    CLAY_TEXT(CLAY_STRING("Add"), CLAY_TEXT_CONFIG(ButtonTextConfig));
-                };
+                // CLAY(CLAY_ID("BuildEncounterAddButton"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
+                //     // Clay_OnHover(ReturnToMainScreenCallback, (intptr_t)WindowState); TODO: Fill this in with a sql search function
+                //     CLAY_TEXT(CLAY_STRING("Add"), CLAY_TEXT_CONFIG(ButtonTextConfig));
+                // };
             };
         };
 
@@ -82,9 +82,27 @@ void BuildEncounterWindow(AppState * state) {
         CLAY(CLAY_ID("BuildEncounterContentWindow"), {
             TTBBuildWindowLayoutConfig,
             .backgroundColor = COLOR_GRAY_BG,
-            .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)
+            .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX),
+            .clip = {true, true, Clay_GetScrollOffset()}
         }) {
-            BuildEncounterChain();
+            CLAY(CLAY_ID("BuildListHeader"), {
+                BuildWindowRow
+            }) {
+                CLAY_AUTO_ID(BuildWindowInitiativeHeader){
+                    CLAY_TEXT(CLAY_STRING("Initiative"), CLAY_TEXT_CONFIG(StatPageTextConfig));
+                }
+                CLAY_AUTO_ID(BuildWindowNameHeader){
+                    CLAY_TEXT(CLAY_STRING("Name"), CLAY_TEXT_CONFIG(StatPageTextConfig));
+                }
+                CLAY_AUTO_ID(BuildWindowQuantityHeader){
+                    CLAY_TEXT(CLAY_STRING("Quantity"), CLAY_TEXT_CONFIG(StatPageTextConfig));
+                }
+            }
+            for (int i = 0; i < BUILD_LIST_MAX; i++) {
+            if ('\0' != BuildList[i][0]) {
+                BuildEncounterChain();
+            }
+    } 
         };
         CLAY(CLAY_ID("BuildEncounterCreatureSidebar"), {
             SidebarLayoutConfig,
@@ -138,7 +156,10 @@ void BuildEncounterChain() {
         .backgroundColor = COLOR_GREEN,
         .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)
     }){
-
+        if ('\0' != BuildList[0][0]) {
+            Clay_String NameAdd = MakeClayString(BuildList[0]);
+            CLAY_TEXT(NameAdd, CLAY_TEXT_CONFIG(StatPageTextConfig));
+        }        
     }
 }
 
@@ -146,7 +167,7 @@ void AddToBuildChain(const char *ParticipantToAdd) {
     for (int i = 0; i < BUILD_LIST_MAX; i++) {
         if ('\0' == BuildList[i][0]) {
             SDL_strlcpy(BuildList[i], ParticipantToAdd, 64);
-            SDL_Log("Added: %s", ParticipantToAdd);
+            SDL_Log("Added: %s", BuildList[i]);
             break;
         }
     }    
@@ -158,3 +179,4 @@ void PlayerBuildListCallback(Clay_ElementId elementId, Clay_PointerData pointerD
         SDL_Log("Callback: %s", NameToAdd->chars);
         AddToBuildChain(NameToAdd->chars);
     }
+}

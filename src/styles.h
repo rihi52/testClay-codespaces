@@ -59,7 +59,12 @@ extern Clay_LayoutConfig TypeContainerLayoutConfig;
 extern Clay_LayoutConfig SourceContainerLayoutConfig;
 
 extern Clay_LayoutConfig BuildWindowRow;
+
+extern Clay_LayoutConfig BuildWindowInitiativeHeader;
+extern Clay_LayoutConfig BuildWindowNameHeader;
+extern Clay_LayoutConfig BuildWindowQuantityHeader;
 extern Clay_LayoutConfig TTBBuildWindowLayoutConfig;
+extern Clay_LayoutConfig BuildListContainer;
 
 /* Colors */
 extern const Clay_Color COLOR_ORANGE;

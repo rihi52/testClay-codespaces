@@ -63,14 +63,6 @@ Clay_LayoutConfig TTBParentWindowLayoutConfig = {
     .layoutDirection = CLAY_TOP_TO_BOTTOM
 };
 
-Clay_LayoutConfig TTBBuildWindowLayoutConfig = {
-    .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
-    .padding = { 0, 0, 0, 0},
-    .childGap = 8,
-    .childAlignment =  { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_TOP },
-    .layoutDirection = CLAY_TOP_TO_BOTTOM
-};
-
 Clay_LayoutConfig LTRParentWindowLayoutConfig = {
     .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
     .padding = { 0, 0, 0, 0},
@@ -207,14 +199,59 @@ Clay_LayoutConfig StatPageAbilityDivider = {
     .layoutDirection = CLAY_LEFT_TO_RIGHT
 };
 
-Clay_LayoutConfig BuildWindowRow = {
-    .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_FIXED(100) },
+Clay_LayoutConfig TTBBuildWindowLayoutConfig = {
+    .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_GROW(0) },
+    .padding = { 0, 0, 0, 0},
+    .childGap = 8,
+    .childAlignment =  { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_TOP },
+    .layoutDirection = CLAY_TOP_TO_BOTTOM
+};
+
+Clay_LayoutConfig BuildWindowInitiativeHeader = {
+    .sizing = { CLAY_SIZING_PERCENT(0.2), CLAY_SIZING_FIXED(100) },
     .padding = { 4, 4, 4, 4},
     .childGap = 0,
-    .childAlignment =  { CLAY_ALIGN_X_CENTER, CLAY_ALIGN_Y_CENTER},
+    .childAlignment =  { CLAY_ALIGN_X_LEFT, CLAY_ALIGN_Y_CENTER},
     .layoutDirection = CLAY_LEFT_TO_RIGHT
 };
 
+Clay_LayoutConfig BuildWindowNameHeader = {
+    .sizing = { CLAY_SIZING_PERCENT(0.6), CLAY_SIZING_FIXED(100) },
+    .padding = { 4, 4, 4, 4},
+    .childGap = 0,
+    .childAlignment =  { CLAY_ALIGN_X_LEFT, CLAY_ALIGN_Y_CENTER},
+    .layoutDirection = CLAY_LEFT_TO_RIGHT
+};
+
+Clay_LayoutConfig BuildWindowQuantityHeader = {
+    .sizing = { CLAY_SIZING_PERCENT(0.2), CLAY_SIZING_FIXED(100) },
+    .padding = { 4, 4, 4, 4},
+    .childGap = 0,
+    .childAlignment =  { CLAY_ALIGN_X_LEFT, CLAY_ALIGN_Y_CENTER},
+    .layoutDirection = CLAY_LEFT_TO_RIGHT
+};
+
+Clay_LayoutConfig BuildWindowRow = {
+    .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_FIXED(100) },
+    .padding = { 0, 0, 0, 0},
+    .childGap = 0,
+    .childAlignment =  { CLAY_ALIGN_X_LEFT, CLAY_ALIGN_Y_CENTER},
+    .layoutDirection = CLAY_LEFT_TO_RIGHT
+};
+
+Clay_LayoutConfig BuildListContainer = {
+    .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_FIXED(100) },
+    .padding = { MAIN_WINDOW_PADDING, MAIN_WINDOW_PADDING, MAIN_WINDOW_PADDING, MAIN_WINDOW_PADDING},
+    .childGap = 0,
+    .childAlignment =  { CLAY_ALIGN_X_LEFT, CLAY_ALIGN_Y_TOP },
+    .layoutDirection = CLAY_TOP_TO_BOTTOM
+};
+
+/****************************************
+ * 
+ *              Text Configs
+ * 
+ ****************************************/
 Clay_TextElementConfig MainLabelTextConfig = {
     .textColor = COLOR_WHITE,
     .fontId = 0,

@@ -263,7 +263,11 @@ void PlayerDatabaseWindow(AppState * state) {
 }
 
 void MakeCreatureHeader(int i, int CallingWindow) {
-    CLAY(CLAY_IDI("CreatureHeader", i), {CreatureButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_SM_PX)}) {
+    CLAY(CLAY_IDI("CreatureHeader", i), {
+        CreatureButtonLayoutConfig,
+        .backgroundColor = (gAppState->focusedId.id == CLAY_IDI("CreatureHeader", i).id) ? COLOR_GRAY_SELECT : COLOR_BUTTON_GRAY,
+        .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_SM_PX)
+    }) {
         Clay_ElementId Id = CLAY_IDI("CreatureHeader", i);
         SDL_Log("%s", Id.stringId.chars);
         Clay_ElementId * pId = &Id;
