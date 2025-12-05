@@ -215,7 +215,7 @@ Clay_LayoutConfig BuildWindowInitiativeHeader = {
     .layoutDirection = CLAY_LEFT_TO_RIGHT
 };
 
-Clay_LayoutConfig BuildWindowNameHeader = {
+Clay_LayoutConfig BuildWindowDescriptionHeader = {
     .sizing = { CLAY_SIZING_PERCENT(0.6), CLAY_SIZING_FIXED(100) },
     .padding = { 4, 4, 4, 4},
     .childGap = 0,
@@ -232,11 +232,19 @@ Clay_LayoutConfig BuildWindowQuantityHeader = {
 };
 
 Clay_LayoutConfig BuildWindowRow = {
-    .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_FIXED(100) },
-    .padding = { 0, 0, 0, 0},
-    .childGap = 0,
+    .sizing = { CLAY_SIZING_GROW(0), CLAY_SIZING_FIXED(50) },
+    .padding = { 4, 4, 4, 4},
+    .childGap = 8,
     .childAlignment =  { CLAY_ALIGN_X_LEFT, CLAY_ALIGN_Y_CENTER},
     .layoutDirection = CLAY_LEFT_TO_RIGHT
+};
+
+Clay_LayoutConfig BuildInitiativeQuantityLayoutConfig = {
+    .sizing = { CLAY_SIZING_PERCENT(0.2), CLAY_SIZING_FIXED(32) },
+    .padding = { 0, 0, 0, 0},
+    .childGap = 16,
+    .childAlignment =  { CLAY_ALIGN_X_LEFT, CLAY_ALIGN_Y_CENTER },
+    .layoutDirection = CLAY_TOP_TO_BOTTOM
 };
 
 Clay_LayoutConfig BuildListContainer = {

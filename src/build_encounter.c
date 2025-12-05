@@ -13,7 +13,7 @@
 char BuildList[BUILD_LIST_MAX][64] = {0};
 Clay_String RaviName = {0};
 
-void BuildEncounterChain();
+void BuildEncounterChain(int position);
 void PlayerBuildListCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData);
 void AddToBuildChain(const char *ParticipantToAdd);
 
@@ -91,8 +91,8 @@ void BuildEncounterWindow(AppState * state) {
                 CLAY_AUTO_ID(BuildWindowInitiativeHeader){
                     CLAY_TEXT(CLAY_STRING("Initiative"), CLAY_TEXT_CONFIG(StatPageTextConfig));
                 }
-                CLAY_AUTO_ID(BuildWindowNameHeader){
-                    CLAY_TEXT(CLAY_STRING("Name"), CLAY_TEXT_CONFIG(StatPageTextConfig));
+                CLAY_AUTO_ID(BuildWindowDescriptionHeader){
+                    CLAY_TEXT(CLAY_STRING("Description"), CLAY_TEXT_CONFIG(StatPageTextConfig));
                 }
                 CLAY_AUTO_ID(BuildWindowQuantityHeader){
                     CLAY_TEXT(CLAY_STRING("Quantity"), CLAY_TEXT_CONFIG(StatPageTextConfig));
@@ -100,7 +100,7 @@ void BuildEncounterWindow(AppState * state) {
             }
             for (int i = 0; i < BUILD_LIST_MAX; i++) {
             if ('\0' != BuildList[i][0]) {
-                BuildEncounterChain();
+                BuildEncounterChain(i);
             }
     } 
         };
@@ -130,8 +130,8 @@ void BuildEncounterWindow(AppState * state) {
                         .color = COLOR_WHITE
                     }
                 }){
-                    Clay_OnHover(FocusWindowCallback, state);
-                    if (state->focusedId.id == CLAY_ID("CreatureSearchTextBox").id) {
+                    Clay_OnHover(FocusWindowCallback, gAppState);
+                    if (gAppState->focusedId.id == CLAY_ID("CreatureSearchTextBox").id) {
                         /* Using dynamically changing char * SearchText */
                         CLAY_TEXT(TypedText, CLAY_TEXT_CONFIG(InputTextConfig));
                     }
@@ -150,16 +150,48 @@ void BuildEncounterWindow(AppState * state) {
     };
 }
 
-void BuildEncounterChain() {
+void BuildEncounterChain(int position) {
     CLAY_AUTO_ID({
         BuildWindowRow,
         .backgroundColor = COLOR_GREEN,
         .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)
     }){
-        if ('\0' != BuildList[0][0]) {
-            Clay_String NameAdd = MakeClayString(BuildList[0]);
-            CLAY_TEXT(NameAdd, CLAY_TEXT_CONFIG(StatPageTextConfig));
-        }        
+        CLAY(CLAY_IDI("BuildListPosition", position), {
+            BuildInitiativeQuantityLayoutConfig,
+            .backgroundColor = (gAppState->focusedId.id == CLAY_IDI("BuildListPosition", position).id) ? COLOR_BLACK : COLOR_GRAY_BG,
+            .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_SM_PX),
+            .border = {
+                .width = CLAY_BORDER_ALL(INPUT_BORDER_WIDTH_PX),
+                .color = COLOR_WHITE
+            }
+        }){
+            Clay_OnHover(FocusWindowCallback, gAppState);
+            if (gAppState->focusedId.id == CLAY_IDI("BuildListPosition", position).id) {
+                /* Using dynamically changing char * SearchText */
+                CLAY_TEXT(TypedText, CLAY_TEXT_CONFIG(InputTextConfig));
+            }
+        }
+        CLAY(CLAY_IDI("BuildListInitiative", position), {BuildWindowDescriptionHeader}){
+            if ('\0' != BuildList[0][0]) {
+                Clay_String NameAdd = MakeClayString(BuildList[0]);
+                CLAY_TEXT(NameAdd, CLAY_TEXT_CONFIG(StatPageTextConfig));
+            }
+        }
+        CLAY(CLAY_IDI("BuildListInitiative", position), {
+            BuildInitiativeQuantityLayoutConfig,
+            .backgroundColor = (gAppState->focusedId.id == CLAY_IDI("BuildListInitiative", position).id) ? COLOR_BLACK : COLOR_GRAY_BG,
+            .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_SM_PX),
+            .border = {
+                .width = CLAY_BORDER_ALL(INPUT_BORDER_WIDTH_PX),
+                .color = COLOR_WHITE
+            }
+        }){
+            Clay_OnHover(FocusWindowCallback, gAppState);
+            if (gAppState->focusedId.id == CLAY_ID("BuildListInitiative").id) {
+                /* Using dynamically changing char * SearchText */
+                CLAY_TEXT(TypedText, CLAY_TEXT_CONFIG(InputTextConfig));
+            }
+        }
     }
 }
 
