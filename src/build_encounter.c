@@ -10,7 +10,8 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_keyboard.h>
 
-char *BuildList[BUILD_LIST_MAX] = {0};
+char BuildList[BUILD_LIST_MAX][64] = {0};
+Clay_String RaviName = {0};
 
 void BuildEncounterChain();
 void PlayerBuildListCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData);
@@ -37,10 +38,8 @@ void BuildEncounterWindow(AppState * state) {
                     CLAY_TEXT(CLAY_STRING("Finn"), CLAY_TEXT_CONFIG(ButtonTextConfig));
                 };
                 CLAY(CLAY_ID("PlayerTwo"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
-                    char *name = "Ravi";
-                    Clay_String RaviName = { false, sizeof(name), "Ravi"};
-                    SDL_Log("%s", RaviName.chars);
-                    Clay_OnHover(PlayerBuildListCallback, &RaviName.chars );
+                    RaviName = CLAY_STRING("Ravi");
+                    Clay_OnHover(PlayerBuildListCallback, &RaviName );
                     CLAY_TEXT(CLAY_STRING("Ravi"), CLAY_TEXT_CONFIG(ButtonTextConfig));
                 };
                 CLAY(CLAY_ID("PlayerThree"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
@@ -145,8 +144,8 @@ void BuildEncounterChain() {
 
 void AddToBuildChain(const char *ParticipantToAdd) {
     for (int i = 0; i < BUILD_LIST_MAX; i++) {
-        if (NULL == BuildList[i]) {
-            SDL_strlcpy(BuildList[i], ParticipantToAdd, sizeof(ParticipantToAdd));
+        if ('\0' == BuildList[i][0]) {
+            SDL_strlcpy(BuildList[i], ParticipantToAdd, 64);
             SDL_Log("Added: %s", ParticipantToAdd);
             break;
         }
@@ -155,8 +154,7 @@ void AddToBuildChain(const char *ParticipantToAdd) {
 
 void PlayerBuildListCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData) {
     if (pointerData.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME) {
-        char *NameToAdd = (char *) userData;
-        SDL_Log("Callback: %s", NameToAdd);
-        AddToBuildChain(NameToAdd);
+        Clay_String *NameToAdd = (Clay_String *) userData;
+        SDL_Log("Callback: %s", NameToAdd->chars);
+        AddToBuildChain(NameToAdd->chars);
     }
-}
