@@ -293,8 +293,11 @@ void MakeCreatureHeader(int i, int CallingWindow) {
             };
         };
         if (CREATURE_DB_SCREEN == CallingWindow) {
-            Clay_OnHover(CallStatBlockCallback, &WindowState);
-        }        
+            Clay_OnHover(CallStatBlockCallback, &HeadersToShow[i]);
+        }
+        else if (BUILD_ENCOUNTER_SCREEN == CallingWindow) {
+            Clay_OnHover(PlayerBuildListCallback, &DBPageHeaders[i].CreatureName);
+        }      
     };
 }
 
