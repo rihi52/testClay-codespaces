@@ -108,6 +108,9 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     if (!gAppState) return SDL_APP_FAILURE;
 
     gAppState->focusedId = CLAY_ID("NULL");
+    gAppState->StringToModify.isStaticallyAllocated = true;
+    gAppState->StringToModify.chars = TextBuffer;
+    gAppState->StringToModify.length = 0;
 
     if (!SDL_CreateWindowAndRenderer("GUIDNBATTER", 1280, 720, SDL_WINDOW_RESIZABLE, &gAppState->window, &gAppState->rendererData.renderer)) {
         SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Failed to create window and renderer: %s", SDL_GetError());
