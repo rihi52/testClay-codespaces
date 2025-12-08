@@ -6,15 +6,16 @@
 
 #define BUILD_LIST_MAX  50
 
-typedef struct participant {
-    char *name;
+typedef struct BuildListMember {
     int initiative;
-    int initiativeSpot;
-    int hp;
-    bool isMalloc;
-    struct participant *next;
-}participant;
+    char *name;
+    int Quantity;
+}BuildListMember;
+
+extern Clay_String CreatureSearch;
+extern Clay_String PlayerSearch;
 
 void BuildEncounterWindow(AppState * state);
+void PlayerBuildListCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData);
 
 #endif /* BUILD_ENCOUNTER_H */
