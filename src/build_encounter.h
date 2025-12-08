@@ -12,7 +12,6 @@ typedef struct BuildListMember {
     int Quantity;
 }BuildListMember;
 
-extern Clay_String CreatureSearch;
 extern Clay_String PlayerSearch;
 
 void BuildEncounterWindow(AppState * state);

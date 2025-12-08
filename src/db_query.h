@@ -23,5 +23,7 @@
 // int LoadCreatureHeaderAlphabetical(int MonsterId);
 Clay_String MakeClayString(const char * string);
 void ModifyTypedString(void);
+Clay_String MakeClayIntString(int value);
+void ClearClayString(Clay_String *s);
 
 #endif /* DB_QUERY */

@@ -53,7 +53,15 @@ typedef struct AppState {
 
 extern AppState *gAppState;
 
+typedef struct TextBox {
+    Clay_String StringToDisplay;
+    char TextBoxBuffer[MAX_TEXT];
+    bool Focused;
+} TextBox;
+
 extern Clay_String TypedText;
+
+extern TextBox CreatureSearch;
 
 extern Clay_String StatName;
 extern Clay_String StatSize;
@@ -86,5 +94,6 @@ extern Clay_String StatAction4;
 void ReturnToMainScreenCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData);
 void FocusWindowCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void * userData);
 void SearchButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData);
+void ConnectTextBuffers(TextBox * TextToFill, uint32_t CopyOrWrite);
 
 #endif /* GLOBAL_H */

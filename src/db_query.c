@@ -51,6 +51,21 @@ Clay_String MakeClayString(const char * string) {
     return str;
 }
 
+void ClearClayString(Clay_String *s) {
+    if (!s->isStaticallyAllocated && s->chars != NULL) {
+        SDL_free((void*)s->chars);
+    }
+    s->chars = NULL;
+    s->length = 0;
+    s->isStaticallyAllocated = false;
+}
+
+Clay_String MakeClayIntString(int value) {
+    char buffer[32];
+    SDL_snprintf(buffer, sizeof(buffer), "%d", value);
+    return MakeClayString(buffer);
+}
+
 static const char * BoundedStrStr(const char * haystack, const char * needle, size_t haystackLen, size_t NeedleLen) {
     if (NeedleLen == 0) {
         return NULL;

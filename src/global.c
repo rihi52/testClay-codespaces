@@ -16,6 +16,8 @@ float ScrollOffset = 0;
 
 bool MouseDown;
 
+TextBox CreatureSearch;
+
 Clay_String TypedText = {0};
 
 Clay_String StatName = {0};
@@ -46,6 +48,19 @@ Clay_String StatAction2 = {0};
 Clay_String StatAction3 = {0};
 Clay_String StatAction4 = {0};
 
+void ConnectTextBuffers(TextBox * TextToFill, uint32_t CopyOrWrite) {
+    if (0 == CopyOrWrite) {
+        SDL_strlcpy(TextToFill->TextBoxBuffer, TextBuffer, SDL_strlen(TextBuffer));
+        TextToFill->StringToDisplay.length = SDL_strlen(TextToFill->TextBoxBuffer);
+    }
+    else {
+        SDL_strlcpy(TextBuffer, TextToFill->TextBoxBuffer, SDL_strlen(TextBuffer));
+        TextToFill->StringToDisplay.length = SDL_strlen(TextToFill->TextBoxBuffer);
+    }
+    return;
+}
+
+/* Global Callbacks*/
 void FocusWindowCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void * userData) {
     AppState *state = userData;
     if (pointerData.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME) {
@@ -69,6 +84,6 @@ void ReturnToMainScreenCallback(Clay_ElementId elementId, Clay_PointerData point
 void SearchButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData) {
     if (pointerData.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME) {
         char * SearchText = &TextBuffer[0];
-        SearchCreatureNames(SearchText);
+        //SearchCreatureNames(SearchText);
     }
 }

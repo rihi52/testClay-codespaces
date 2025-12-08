@@ -292,12 +292,12 @@ void MakeCreatureHeader(int i, int CallingWindow) {
                 //CLAY_TEXT(CreatureSourceText, CLAY_TEXT_CONFIG(ButtonTextConfig));
             };
         };
-        if (CREATURE_DB_SCREEN == CallingWindow) {
-            Clay_OnHover(CallStatBlockCallback, &HeadersToShow[i]);
-        }
-        else if (BUILD_ENCOUNTER_SCREEN == CallingWindow) {
-            Clay_OnHover(PlayerBuildListCallback, &DBPageHeaders[i].CreatureName);
-        }      
+        // if (CREATURE_DB_SCREEN == CallingWindow) {
+        //     Clay_OnHover(CallStatBlockCallback, &HeadersToShow[i]);
+        // }
+        // else if (BUILD_ENCOUNTER_SCREEN == CallingWindow) {
+        //     Clay_OnHover(PlayerBuildListCallback, &DBPageHeaders[i].CreatureName);
+        // }      
     };
 }
 

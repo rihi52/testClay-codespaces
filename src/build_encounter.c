@@ -16,7 +16,6 @@ Clay_String FinnName = {0};
 Clay_String RaviName = {0};
 Clay_String PaxName = {0};
 Clay_String TheonName = {0};
-Clay_String CreatureSearch = {0};
 Clay_String PlayerSearch = {0};
 
 void BuildEncounterChain(int position);
@@ -160,10 +159,17 @@ void BuildEncounterWindow(AppState * state) {
                     }
                 }){
                     Clay_OnHover(FocusWindowCallback, gAppState);
+                    uint32_t PreviousFocus = gAppState->focusedId.id;
                     if (gAppState->focusedId.id == CLAY_ID("CreatureSearchTextBox").id) {
                         /* Using dynamically changing char * SearchText */
-                        CreatureSearch.chars = TextBuffer;
-                        CLAY_TEXT(CreatureSearch, CLAY_TEXT_CONFIG(InputTextConfig));
+                        if(PreviousFocus == gAppState->focusedId.id) {
+                            ConnectTextBuffers(&CreatureSearch, 0);
+                        }
+                        else {
+                            ConnectTextBuffers(&CreatureSearch, 1);
+                        }
+                        
+                        CLAY_TEXT(CreatureSearch.StringToDisplay, CLAY_TEXT_CONFIG(InputTextConfig));
                     }
                 }
 
