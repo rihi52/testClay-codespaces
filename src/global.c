@@ -49,8 +49,8 @@ Clay_String StatAction4 = {0};
 void FocusWindowCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void * userData) {
     AppState *state = userData;
     if (pointerData.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME) {
-        state->focusedId = CLAY_ID("NULL");
-        state->focusedId = elementId;
+        gAppState->focusedId = CLAY_ID("NULL");
+        gAppState->focusedId = elementId;
         SDL_Log("FocusCallback");
     }
 }
@@ -58,9 +58,17 @@ void FocusWindowCallback(Clay_ElementId elementId, Clay_PointerData pointerData,
 void ReturnToMainScreenCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData) {
     int * check = (int *) userData;
     if (pointerData.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME) {
+        gAppState->focusedId = CLAY_ID("NULL");
         SDL_memset(TextBuffer, 0, sizeof(TextBuffer));
         ScrollOffset = 0;
         WindowState = MAIN_SCREEN;
         // WindowState = ADD_STAT_SCREEN;
+    }
+}
+
+void SearchButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData) {
+    if (pointerData.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME) {
+        char * SearchText = &TextBuffer[0];
+        SearchCreatureNames(SearchText);
     }
 }
