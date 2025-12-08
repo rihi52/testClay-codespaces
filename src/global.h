@@ -44,10 +44,11 @@ typedef struct {
     TTF_Font **fonts;
 } Clay_SDL3RendererData;
 
-typedef struct app_state {
+typedef struct AppState {
     SDL_Window *window;
     Clay_SDL3RendererData rendererData;
     Clay_ElementId focusedId;
+    Clay_String StringToModify;
 } AppState;
 
 extern AppState *gAppState;
@@ -84,5 +85,6 @@ extern Clay_String StatAction4;
 
 void ReturnToMainScreenCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData);
 void FocusWindowCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void * userData);
+void SearchButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData);
 
 #endif /* GLOBAL_H */
