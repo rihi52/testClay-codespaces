@@ -1,0 +1,4 @@
+#ifndef CREATURE_DATABASE_H
+#define CREATURE_DATABASE_H
+
+#endif /* CREATURE_DATABASE_H */

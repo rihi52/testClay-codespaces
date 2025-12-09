@@ -1,6 +1,18 @@
 #include "clay.h"
 #include "global.h"
+#include "db_query.h"
+#include "styles.h"
 
+/*========================================================================* 
+ *  SECTION - Local prototypes
+ *========================================================================* 
+ */
+static void ClearTextBoxes();
+
+/*========================================================================* 
+ *  SECTION - extern variables
+ *========================================================================* 
+ */
 int WindowState = 0;
 
 char TextBuffer[MAX_TEXT] = {0};
@@ -16,9 +28,10 @@ float ScrollOffset = 0;
 
 bool MouseDown;
 
-TextBox CreatureSearch;
-
-Clay_String TypedText = {0};
+TextBox BuildCreatureSearch;
+TextBox BuildPlayerSearch;
+TextBox DBCreatureSearch;
+TextBox DBPlayerSearch;
 
 Clay_String StatName = {0};
 Clay_String StatSize = {0};
@@ -48,19 +61,78 @@ Clay_String StatAction2 = {0};
 Clay_String StatAction3 = {0};
 Clay_String StatAction4 = {0};
 
-void ConnectTextBuffers(TextBox * TextToFill, uint32_t CopyOrWrite) {
-    if (0 == CopyOrWrite) {
-        SDL_strlcpy(TextToFill->TextBoxBuffer, TextBuffer, SDL_strlen(TextBuffer));
-        TextToFill->StringToDisplay.length = SDL_strlen(TextToFill->TextBoxBuffer);
+/*========================================================================* 
+ *  SECTION - Global functions
+ *========================================================================* 
+ */
+
+ /* Helpers */
+void ModifyTextBoxText(TextBox * TextToModify, uint32_t CopyOrWrite) {
+    
+    
+    if (COPY_TEXT == CopyOrWrite) {
+        memset(TextBuffer, 0, sizeof(TextBuffer));
+        SDL_strlcpy(TextBuffer, TextToModify->TextBoxBuffer, MAX_TEXT);
     }
     else {
-        SDL_strlcpy(TextBuffer, TextToFill->TextBoxBuffer, SDL_strlen(TextBuffer));
-        TextToFill->StringToDisplay.length = SDL_strlen(TextToFill->TextBoxBuffer);
+        SDL_strlcpy(TextToModify->TextBoxBuffer, TextBuffer, sizeof(TextBuffer));
+        
     }
-    return;
+    TextToModify->StringToDisplay.length = SDL_strlen(TextToModify->TextBoxBuffer);
 }
 
-/* Global Callbacks*/
+void FocusAndWriteTextBox(Clay_ElementId IdToFocus, uint32_t CurrentFocus, TextBox * TextToModify) {
+    if (gAppState->focusedId.id == IdToFocus.id) {
+        if(PreviousFocusId != CurrentFocus) {
+            ModifyTextBoxText(TextToModify, COPY_TEXT);
+        }
+        else {
+            ModifyTextBoxText(TextToModify, WRITE_TEXT);
+        }
+    }
+    CLAY_TEXT(TextToModify->StringToDisplay, CLAY_TEXT_CONFIG(InputTextConfig));
+}
+
+void InitializeTextBoxes() {
+    SDL_memset(BuildCreatureSearch.TextBoxBuffer, 0, sizeof(BuildCreatureSearch.TextBoxBuffer));
+    BuildCreatureSearch.StringToDisplay.chars = BuildCreatureSearch.TextBoxBuffer;
+    BuildCreatureSearch.StringToDisplay.length = 0;
+    BuildCreatureSearch.StringToDisplay.isStaticallyAllocated = false;
+
+    SDL_memset(BuildPlayerSearch.TextBoxBuffer, 0, sizeof(BuildPlayerSearch.TextBoxBuffer));
+    BuildPlayerSearch.StringToDisplay.chars = BuildPlayerSearch.TextBoxBuffer;
+    BuildPlayerSearch.StringToDisplay.length = 0;
+    BuildPlayerSearch.StringToDisplay.isStaticallyAllocated = false;
+
+    SDL_memset(DBCreatureSearch.TextBoxBuffer, 0, sizeof(DBCreatureSearch.TextBoxBuffer));
+    DBCreatureSearch.StringToDisplay.chars = DBCreatureSearch.TextBoxBuffer;
+    DBCreatureSearch.StringToDisplay.length = 0;
+    DBCreatureSearch.StringToDisplay.isStaticallyAllocated = false;
+
+    SDL_memset(DBPlayerSearch.TextBoxBuffer, 0, sizeof(DBPlayerSearch.TextBoxBuffer));
+    DBPlayerSearch.StringToDisplay.chars = DBPlayerSearch.TextBoxBuffer;
+    DBPlayerSearch.StringToDisplay.length = 0;
+    DBPlayerSearch.StringToDisplay.isStaticallyAllocated = false;
+}
+
+static void ClearTextBoxes() {
+    SDL_memset(TextBuffer, 0, sizeof(TextBuffer));
+
+    SDL_memset(BuildCreatureSearch.TextBoxBuffer, 0, sizeof(BuildCreatureSearch.TextBoxBuffer));
+    BuildCreatureSearch.StringToDisplay.length = 0;
+
+    SDL_memset(BuildPlayerSearch.TextBoxBuffer, 0, sizeof(BuildPlayerSearch.TextBoxBuffer));
+    BuildPlayerSearch.StringToDisplay.length = 0;
+
+    SDL_memset(DBCreatureSearch.TextBoxBuffer, 0, sizeof(DBCreatureSearch.TextBoxBuffer));
+    DBCreatureSearch.StringToDisplay.length = 0;
+
+    SDL_memset(DBPlayerSearch.TextBoxBuffer, 0, sizeof(DBPlayerSearch.TextBoxBuffer));
+    DBPlayerSearch.StringToDisplay.length = 0;
+}
+
+/* Callbacks*/
+
 void FocusWindowCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void * userData) {
     AppState *state = userData;
     if (pointerData.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME) {
@@ -74,7 +146,7 @@ void ReturnToMainScreenCallback(Clay_ElementId elementId, Clay_PointerData point
     int * check = (int *) userData;
     if (pointerData.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME) {
         gAppState->focusedId = CLAY_ID("NULL");
-        SDL_memset(TextBuffer, 0, sizeof(TextBuffer));
+        ClearTextBoxes();
         ScrollOffset = 0;
         WindowState = MAIN_SCREEN;
         // WindowState = ADD_STAT_SCREEN;
@@ -82,8 +154,8 @@ void ReturnToMainScreenCallback(Clay_ElementId elementId, Clay_PointerData point
 }
 
 void SearchButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData) {
-    if (pointerData.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME) {
-        char * SearchText = &TextBuffer[0];
-        //SearchCreatureNames(SearchText);
-    }
+    // if (pointerData.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME) {
+    //     char * SearchText = &TextBuffer[0];
+    //     SearchCreatureNames(SearchText);
+    // }
 }

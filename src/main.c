@@ -13,11 +13,12 @@
 #include <stdio.h>
 #include "global.h"
 #include "main_window.h"
-#include "text_input.h"
 #include "db_query.h"
 
 // --- Global AppState ---
 AppState *gAppState = NULL;
+
+uint32_t PreviousFocusId = 0;
 
 Uint64 lastTime = 0;
 Uint64 frequency = 0;
@@ -60,7 +61,6 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
         return SDL_APP_FAILURE;
     }
 
-
     // DatabaseOpen();
     // for (int i = 0; i < MAX_DB_COUNT; i++) {
     //     if (0 == LoadCreatureHeaderAlphabetical(i)) {
@@ -99,22 +99,14 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     StatAction3 = MakeClayString("Tail. Melee Weapon Attack: +9 to hit, reach 10 ft., one target. Hit: 15 (3d6 + 5) bludgeoning damage.");
     StatAction4 = MakeClayString("Enslave (3/Day). The aboleth targets one creature it can see within 30 feet of it. The target must succeed on a DC 14 Wisdom saving throw or be magically charmed by the aboleth until the aboleth dies or until it is on a different plane of existence from the target. The charmed target is under the aboleth's control and can't take reactions, and the aboleth and the target can communicate telepathically with each other over any distance. Whenever the charmed target takes damage, the target can repeat the saving throw. On a success, the effect ends. No more than once every 24 hours, the target can also repeat the saving throw when it is at least 1 mile away from the aboleth.");
 
-    TypedText.isStaticallyAllocated = true;
-    TypedText.chars = TextBuffer;
-    TypedText.length = 0;
+    InitializeTextBoxes();
     MouseDown = false;
-
-    // CreatureSearch = (TextBox){0};
-    CreatureSearch.Focused = false;
-    SDL_memset(&CreatureSearch.StringToDisplay.chars, 0, sizeof(CreatureSearch.StringToDisplay.chars));
-    CreatureSearch.StringToDisplay.chars = CreatureSearch.TextBoxBuffer;
-    CreatureSearch.StringToDisplay.length = 0;
-    CreatureSearch.StringToDisplay.isStaticallyAllocated = false;
 
     gAppState = SDL_calloc(1, sizeof(AppState));
     if (!gAppState) return SDL_APP_FAILURE;
 
     gAppState->focusedId = CLAY_ID("NULL");
+
     gAppState->StringToModify.isStaticallyAllocated = true;
     gAppState->StringToModify.chars = TextBuffer;
     gAppState->StringToModify.length = 0;
@@ -189,7 +181,6 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
             break;
         case SDL_EVENT_TEXT_INPUT:
             SDL_strlcat(TextBuffer,event->text.text, MAX_TEXT);
-            TypedText.length = SDL_strlen(TextBuffer);
             break;
         case SDL_EVENT_KEY_DOWN:
             if (BACKSPACE_KEY == event->key.key) ModifyTypedString();
@@ -229,6 +220,7 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     Uint64 frameStart = SDL_GetPerformanceCounter();
 
     Clay_RenderCommandArray render_commands = MainWindow(gAppState);
+    PreviousFocusId = gAppState->focusedId.id;
 
     SDL_SetRenderDrawColor(gAppState->rendererData.renderer, 0, 0, 0, 255);
     SDL_RenderClear(gAppState->rendererData.renderer);

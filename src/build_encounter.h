@@ -4,16 +4,27 @@
 #include "clay.h"
 #include "global.h"
 
+/*========================================================================* 
+ *  SECTION - Defines
+ *========================================================================* 
+ */
+
 #define BUILD_LIST_MAX  50
 
+/*========================================================================* 
+ *  SECTION - Global structs
+ *========================================================================* 
+ */
 typedef struct BuildListMember {
     int initiative;
     char *name;
     int Quantity;
 }BuildListMember;
 
-extern Clay_String PlayerSearch;
-
+/*========================================================================* 
+ *  SECTION - Global prototypes
+ *========================================================================* 
+ */
 void BuildEncounterWindow(AppState * state);
 void PlayerBuildListCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData);
 

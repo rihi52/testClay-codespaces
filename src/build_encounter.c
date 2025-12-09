@@ -10,17 +10,29 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_keyboard.h>
 
+/*========================================================================* 
+ *  SECTION - Local variables
+ *========================================================================* 
+ */
+
 char BuildList[BUILD_LIST_MAX][64] = {0};
 BuildListMember BuildListMembers[BUILD_LIST_MAX] = {0};
 Clay_String FinnName = {0};
 Clay_String RaviName = {0};
 Clay_String PaxName = {0};
 Clay_String TheonName = {0};
-Clay_String PlayerSearch = {0};
 
+/*========================================================================* 
+ *  SECTION - Local prototypes
+ *========================================================================* 
+ */
 void BuildEncounterChain(int position);
 void AddToBuildChain(const char *ParticipantToAdd);
 
+/*========================================================================* 
+ *  SECTION - Global functions
+ *========================================================================* 
+ */
 void BuildEncounterWindow(AppState * state) {
     CLAY(CLAY_ID("BuildWindowOuterContainer"), {LTRParentWindowLayoutConfig, .backgroundColor = COLOR_BLACK, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)} ) {
         /* Sidebar for option buttons */
@@ -70,10 +82,12 @@ void BuildEncounterWindow(AppState * state) {
                     }
                 }){
                     Clay_OnHover(FocusWindowCallback, state);
-                    if (state->focusedId.id == CLAY_ID("PlayerSearchTextBox").id) {
-                        /* Using dynamically changing char * SearchText */
-                        CLAY_TEXT(TypedText, CLAY_TEXT_CONFIG(InputTextConfig));
-                    }
+                    uint32_t CurrentFocus = gAppState->focusedId.id;
+                    FocusAndWriteTextBox(CLAY_ID("PlayerSearchTextBox"), CurrentFocus, &BuildPlayerSearch);
+                    // if (state->focusedId.id == CLAY_ID("PlayerSearchTextBox").id) {
+                    //     /* Using dynamically changing char * SearchText */
+                    //     CLAY_TEXT(TypedText, CLAY_TEXT_CONFIG(InputTextConfig));
+                    // }
                 }
 
                 CLAY(CLAY_ID("BuildPlayerSearchButton"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
@@ -142,9 +156,9 @@ void BuildEncounterWindow(AppState * state) {
                 .clip = {true, true, Clay_GetScrollOffset()}
             }) /* Build Creature Sidebar Top contents*/ {
                 // for (int i = 0; i < TotalCreatures; i++) {
-                //    if (HeadersToShow[i] != -1) {
-                //      MakeCreatureHeader(i, BUILD_ENCOUNTER_SCREEN);
-                //    }
+                //     if (HeadersToShow[i] != -1) {
+                //         MakeCreatureHeader(i, BUILD_ENCOUNTER_SCREEN);
+                //     }
                 // }
             };
             
@@ -159,18 +173,8 @@ void BuildEncounterWindow(AppState * state) {
                     }
                 }){
                     Clay_OnHover(FocusWindowCallback, gAppState);
-                    uint32_t PreviousFocus = gAppState->focusedId.id;
-                    if (gAppState->focusedId.id == CLAY_ID("CreatureSearchTextBox").id) {
-                        /* Using dynamically changing char * SearchText */
-                        if(PreviousFocus == gAppState->focusedId.id) {
-                            ConnectTextBuffers(&CreatureSearch, 0);
-                        }
-                        else {
-                            ConnectTextBuffers(&CreatureSearch, 1);
-                        }
-                        
-                        CLAY_TEXT(CreatureSearch.StringToDisplay, CLAY_TEXT_CONFIG(InputTextConfig));
-                    }
+                    uint32_t CurrentFocus = gAppState->focusedId.id;
+                    FocusAndWriteTextBox(CLAY_ID("CreatureSearchTextBox"), CurrentFocus, &BuildCreatureSearch);
                 }
 
                 CLAY(CLAY_ID("BuildCreatureSearchButton"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
@@ -183,6 +187,10 @@ void BuildEncounterWindow(AppState * state) {
     };
 }
 
+/*========================================================================* 
+ *  SECTION - Local functions
+ *========================================================================* 
+ */
 void BuildEncounterChain(int position) {
     BuildListMembers[position].initiative = 0;
     BuildListMembers[position].name = BuildList[position];

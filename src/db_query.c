@@ -66,45 +66,6 @@ Clay_String MakeClayIntString(int value) {
     return MakeClayString(buffer);
 }
 
-static const char * BoundedStrStr(const char * haystack, const char * needle, size_t haystackLen, size_t NeedleLen) {
-    if (NeedleLen == 0) {
-        return NULL;
-    }
-    if (NeedleLen > haystackLen) {
-        return NULL;
-    }
-    for (int i = 0; i <= haystackLen - NeedleLen; i++) {
-        if (SDL_strncasecmp(&haystack[i], needle, NeedleLen) == 0) {
-            return &haystack[i];
-        }
-    }
-    return NULL;
-
-}
-
-// void SearchCreatureNames(const char * SearchTerm) {
-//     size_t SearchTermLen = SDL_strlen(SearchTerm);
-//     if (0 == SearchTermLen) {
-//         for (int i = 0; i <TotalCreatures; i++) {
-//             HeadersToShow[i] = i;
-//         }
-//         return;
-//     }
-//     for (int i = 0; i < MAX_DB_COUNT; i++) {
-//         if (DBPageHeaders[i].CreatureName.chars != NULL) {
-//             size_t SearchTermLen = SDL_strlen(SearchTerm);
-//             size_t CreatureNameLen = DBPageHeaders[i].CreatureName.length;
-//             if (NULL != BoundedStrStr(DBPageHeaders[i].CreatureName.chars, SearchTerm, CreatureNameLen, SearchTermLen)) {
-//                 SDL_Log("Found match: %s", DBPageHeaders[i].CreatureName.chars);
-//                 HeadersToShow[i] = i;
-//             }
-//             else {
-//                 HeadersToShow[i] = -1;
-//             }
-//         }
-//     }
-// }
-
 // int LoadCreatureHeaderAlphabetical(int MonsterId) {
 
 //     sqlite3_stmt *stmt = NULL;
@@ -144,14 +105,53 @@ static const char * BoundedStrStr(const char * haystack, const char * needle, si
 //     return 0;
 // }
 
+static const char * BoundedStrStr(const char * haystack, const char * needle, size_t haystackLen, size_t NeedleLen) {
+    if (NeedleLen == 0) {
+        return NULL;
+    }
+    if (NeedleLen > haystackLen) {
+        return NULL;
+    }
+    for (int i = 0; i <= haystackLen - NeedleLen; i++) {
+        if (SDL_strncasecmp(&haystack[i], needle, NeedleLen) == 0) {
+            return &haystack[i];
+        }
+    }
+    return NULL;
+
+}
+
+// void SearchCreatureNames(const char * SearchTerm) {
+//     size_t SearchTermLen = SDL_strlen(SearchTerm);
+//     if (0 == SearchTermLen) {
+//         for (int i = 0; i <TotalCreatures; i++) {
+//             HeadersToShow[i] = i;
+//         }
+//         return;
+//     }
+//     for (int i = 0; i < MAX_DB_COUNT; i++) {
+//         if (DBPageHeaders[i].CreatureName.chars != NULL) {
+//             size_t SearchTermLen = SDL_strlen(SearchTerm);
+//             size_t CreatureNameLen = DBPageHeaders[i].CreatureName.length;
+//             if (NULL != BoundedStrStr(DBPageHeaders[i].CreatureName.chars, SearchTerm, CreatureNameLen, SearchTermLen)) {
+//                 SDL_Log("Found match: %s", DBPageHeaders[i].CreatureName.chars);
+//                 HeadersToShow[i] = i;
+//             }
+//             else {
+//                 HeadersToShow[i] = -1;
+//             }
+//         }
+//     }
+// }
+
 void ModifyTypedString(void) {
 
     // Error check to ensure there is something to delete
-    if (TypedText.length == 0) {
+    if (0 == SDL_strlen(TextBuffer)) {
         return;
     }
 
-    size_t i = TypedText.length - 1;
+    size_t i = SDL_strlen(TextBuffer) - 1;
 
     // Move backward to the start byte of the last UTF-8 character
     while (i > 0 && (TextBuffer[i] & 0xC0) == 0x80) {
@@ -160,6 +160,5 @@ void ModifyTypedString(void) {
     }
 
     // i now points to the start of the last UTF-8 character
-    TypedText.length = i;
     TextBuffer[i] = '\0';
 }

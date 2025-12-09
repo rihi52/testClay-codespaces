@@ -3,7 +3,6 @@
 #include "styles.h"
 #include "global.h"
 #include "stdio.h"
-#include "text_input.h"
 #include "db_query.h"
 #include "build_encounter.h"
 
@@ -15,7 +14,6 @@
  *========================================================================* 
  */
 
-
 static void StartEncounterButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData);
 static void BuildEncounterButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData);
 static void CreatureDatabaseButtonCallback(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData);
@@ -24,7 +22,6 @@ static void CallStatBlockCallback(Clay_ElementId elementId, Clay_PointerData poi
 
 void CreatureDatabaseWindow(AppState * state);
 void PlayerDatabaseWindow(AppState * state);
-
 void FillStats(void);
 
 /*========================================================================* 
@@ -53,7 +50,7 @@ Clay_RenderCommandArray MainWindow(AppState * state)
     CLAY(CLAY_ID("OuterContainer"), {MainScreenLayoutConfig, .backgroundColor = COLOR_BLACK, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
 
         switch (WindowState){
-            case MAIN_SCREEN:
+            case 0:
             /* Main label */
             CLAY_TEXT(CLAY_STRING("GUIDNBATTER"), CLAY_TEXT_CONFIG(MainLabelTextConfig));
             /* Start button */
@@ -89,7 +86,7 @@ Clay_RenderCommandArray MainWindow(AppState * state)
             break;
         
         case BUILD_ENCOUNTER_SCREEN:
-            BuildEncounterWindow(state);            
+            BuildEncounterWindow(state);
             break;
         
         case CREATURE_DB_SCREEN:
@@ -99,7 +96,7 @@ Clay_RenderCommandArray MainWindow(AppState * state)
         case PLAYER_DB_SCREEN:
             PlayerDatabaseWindow(state);            
             break;
-        
+
         case ADD_STAT_SCREEN:
             CreatureDatabaseWindow(state);
             break;
@@ -116,7 +113,6 @@ Clay_RenderCommandArray MainWindow(AppState * state)
  *  SECTION - Local Functions 
  *========================================================================*
  */
-
 
 void CreatureDatabaseWindow(AppState * state) {
     /* Creature database window*/
@@ -149,47 +145,41 @@ void CreatureDatabaseWindow(AppState * state) {
                     .backgroundColor = (state->focusedId.id == CLAY_ID("CreatureTextBox").id) ? COLOR_BLACK : COLOR_GRAY_BG,
                     .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_SM_PX),
                     .border = {
-                        .width = CLAY_BORDER_ALL(INPUT_BORDER_WIDTH_PX),
-                        .color = COLOR_WHITE
-                    }
+                                .width = CLAY_BORDER_ALL(INPUT_BORDER_WIDTH_PX),
+                                .color = COLOR_WHITE
+                            }
                 }){
-                    Clay_OnHover(FocusWindowCallback, state);
-                    if (state->focusedId.id == CLAY_ID("CreatureTextBox").id) {
-                        /* Using dynamically changing char * SearchText */
-                        CLAY_TEXT(TypedText, CLAY_TEXT_CONFIG(InputTextConfig));
-                    }
+                    Clay_OnHover(FocusWindowCallback, gAppState);
+                    uint32_t CurrentFocus = gAppState->focusedId.id;
+                    FocusAndWriteTextBox(CLAY_ID("CreatureTextBox"), CurrentFocus, &DBCreatureSearch);       
                 };
 
                 CLAY(CLAY_ID("CreatureDBSearchButton"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
                     // Clay_OnHover(ReturnToMainScreenCallback, &WindowState); TODO: Fill this in with a sql search function
                     CLAY_TEXT(CLAY_STRING("Search"), CLAY_TEXT_CONFIG(ButtonTextConfig));
+                    Clay_OnHover(SearchButtonCallback, &WindowState);
                 };                
             };
         };
 
         /* Main content containing monster lists and stats*/
-        CLAY(CLAY_ID("CreatureDBContentWindow"), {
-            LTRParentWindowLayoutConfig,
-            .backgroundColor = COLOR_BLACK,
-            .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)
-        }) {
-            // TODO: Fill with statblocks with info pulled from sqlite db
-            // 1. Design a stat block
-            // 2. Find a way to collapse and expand it
-
-            /* Container for Creature Header Information */
-            // TODO: Make scrollable
-            CLAY(CLAY_ID("CreatureHeaderContainer"), {  CreatureButtonContainerLayoutConfig,
-                                                        .backgroundColor = COLOR_GRAY_BG,
-                                                        .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX),
-                                                        .clip = {true, true, Clay_GetScrollOffset()}
+        CLAY(CLAY_ID("CreatureDBContentWindow"), {LTRParentWindowLayoutConfig, .backgroundColor = COLOR_BLACK, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
+            CLAY(CLAY_ID("CreatureHeaderContainer"), {  
+                CreatureButtonContainerLayoutConfig,
+                .backgroundColor = COLOR_TRANSPARENT,
+                .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX),
+                .clip = {true, true, Clay_GetScrollOffset()}
             }) {
-
-                // for (int i = 0; i < 30; i++) {
-                //     MakeCreatureHeader(i, CREATURE_DB_SCREEN);
+                // for (int i = 0; i < TotalCreatures; i++) {
+                //     if (HeadersToShow[i] != -1) {
+                //         MakeCreatureHeader(i, CREATURE_DB_SCREEN);
+                //     }                    
                 // }
             }
-            FillStats();
+            if (WindowState == ADD_STAT_SCREEN) {
+                FillStats();
+                
+            }
         };
     };
 }
@@ -203,17 +193,33 @@ void PlayerDatabaseWindow(AppState * state) {
             
             CLAY(CLAY_ID("SidebarTop"), {SidebarTopLayoutConfig, .backgroundColor = COLOR_TRANSPARENT, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX) }) {
 
-                CLAY(CLAY_ID("PlayerDBHomeButton"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
+                CLAY(CLAY_ID("PlayerDBHomeButton"), {
+                    MainScreenButtonLayoutConfig,
+                    .backgroundColor = COLOR_BUTTON_GRAY,
+                    .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)
+                }) {
                     Clay_OnHover(ReturnToMainScreenCallback, &WindowState);
                     CLAY_TEXT(CLAY_STRING("Return Home"), CLAY_TEXT_CONFIG(ButtonTextConfig));
                 };
-                CLAY(CLAY_ID("PlayerDBAddButton"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
+                CLAY(CLAY_ID("PlayerDBAddButton"), {
+                    MainScreenButtonLayoutConfig,
+                    .backgroundColor = COLOR_BUTTON_GRAY,
+                    .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)
+                }) {
                     CLAY_TEXT(CLAY_STRING("Add"), CLAY_TEXT_CONFIG(ButtonTextConfig));
                 };
-                CLAY(CLAY_ID("PlayerDBRemoveButton"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
+                CLAY(CLAY_ID("PlayerDBRemoveButton"), {
+                    MainScreenButtonLayoutConfig,
+                    .backgroundColor = COLOR_BUTTON_GRAY,
+                    .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)
+                }) {
                     CLAY_TEXT(CLAY_STRING("Remove"), CLAY_TEXT_CONFIG(ButtonTextConfig));
                 };
-                CLAY(CLAY_ID("PlayerDBEditButton"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
+                CLAY(CLAY_ID("PlayerDBEditButton"), {
+                    MainScreenButtonLayoutConfig,
+                    .backgroundColor = COLOR_BUTTON_GRAY,
+                    .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)
+                }) {
                     CLAY_TEXT(CLAY_STRING("Edit"), CLAY_TEXT_CONFIG(ButtonTextConfig));
                 };
             };
@@ -221,42 +227,31 @@ void PlayerDatabaseWindow(AppState * state) {
             CLAY(CLAY_ID("SidebarBottom"), SidebarBottomLayoutConfig) {
                 CLAY(CLAY_ID("PlayerTextBox"), {
                     SingleLineInputLayoutConfig,
-                    .backgroundColor = (state->focusedId.id == CLAY_ID("PlayerTextBox").id) ? COLOR_BLACK : COLOR_GRAY_BG,
+                    .backgroundColor = COLOR_GRAY_BG,
                     .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_SM_PX),
                     .border = {
                                 .width = CLAY_BORDER_ALL(INPUT_BORDER_WIDTH_PX),
                                 .color = COLOR_WHITE
                             }
                 }){
-                    Clay_OnHover(FocusWindowCallback, state);
-                    if (state->focusedId.id == CLAY_ID("PlayerTextBox").id) {
-                        char * SearchText = &TextBuffer[0];
-                        /* Custom clay_string to allow for a dynamically changing char* */
-                        Clay_String SomeTextMaybe = {.isStaticallyAllocated = true, .length = SDL_strlen(SearchText), .chars = SearchText};
-                        /* Using dynamically changing char * SearchText */
-                        CLAY_TEXT(SomeTextMaybe, CLAY_TEXT_CONFIG(InputTextConfig));
-                    }       
+                    Clay_OnHover(FocusWindowCallback, gAppState);
+                    uint32_t CurrentFocus = gAppState->focusedId.id;
+                    FocusAndWriteTextBox(CLAY_ID("PlayerTextBox"), CurrentFocus, &DBPlayerSearch);      
                 };
 
-                CLAY(CLAY_ID("PlayerDBSearchButton"), {MainScreenButtonLayoutConfig, .backgroundColor = COLOR_BUTTON_GRAY, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}) {
-                    // Clay_OnHover(ReturnToMainScreenCallback, &WindowState); TODO: Fill this in with a sql search function
+                CLAY(CLAY_ID("PlayerDBSearchButton"), {
+                    MainScreenButtonLayoutConfig,
+                    .backgroundColor = COLOR_BUTTON_GRAY,
+                    .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)
+                }) {
                     CLAY_TEXT(CLAY_STRING("Search"), CLAY_TEXT_CONFIG(ButtonTextConfig));
                 };                
             };
         };
 
         /* Main content containing monster lists and stats*/
-        CLAY(CLAY_ID("PlayerDBContentWindow"), {
-            LTRParentWindowLayoutConfig,
-            .backgroundColor = COLOR_GRAY_BG,
-            .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)
-        }){
-            CLAY(CLAY_ID("PlayerDBHeader"), { 
-                HeadLabelWindow,
-                .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX),
-                .backgroundColor = COLOR_RED
-            }) {
-                
+        CLAY(CLAY_ID("PlayerDBContentWindow"), {LTRParentWindowLayoutConfig, .backgroundColor = COLOR_GRAY_BG, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX)}){
+            CLAY(CLAY_ID("PlayerDBHeader"), { HeadLabelWindow, .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_LG_PX), .backgroundColor = COLOR_RED}) {
             };          
         };
     };
@@ -268,36 +263,34 @@ void MakeCreatureHeader(int i, int CallingWindow) {
         .backgroundColor = (gAppState->focusedId.id == CLAY_IDI("CreatureHeader", i).id) ? COLOR_GRAY_SELECT : COLOR_BUTTON_GRAY,
         .cornerRadius = CLAY_CORNER_RADIUS(GLOBAL_RADIUS_SM_PX)
     }) {
-        Clay_ElementId Id = CLAY_IDI("CreatureHeader", i);
-        SDL_Log("%s", Id.stringId.chars);
-        Clay_ElementId * pId = &Id;
-        CLAY_AUTO_ID({NameContainerLayoutConfig}){
-            // CLAY_TEXT(DBPageHeaders[i].CreatureName, CLAY_TEXT_CONFIG(ButtonTextConfig));
-        };
 
-        CLAY_AUTO_ID({SizeCRContainerLayoutConfig}) {
-            /* change to be just size and type */
-            CLAY_AUTO_ID({CRContainerLayoutConfig}) {
-                // CLAY_TEXT(DBPageHeaders[i].CreatureCR, CLAY_TEXT_CONFIG(ButtonTextConfig));
-            };
-            CLAY_AUTO_ID({SizeContainerLayoutConfig}) {
-                // CLAY_TEXT(DBPageHeaders[i].CreatureSize, CLAY_TEXT_CONFIG(ButtonTextConfig));
-            };
-        };
-        CLAY_AUTO_ID({TypeSrcContainerLayoutConfig}) {
-            CLAY_AUTO_ID({TypeContainerLayoutConfig}) {
-                // CLAY_TEXT(DBPageHeaders[i].CreatureType, CLAY_TEXT_CONFIG(ButtonTextConfig));
-            };
-            CLAY_AUTO_ID({SourceContainerLayoutConfig}) {
-                //CLAY_TEXT(CreatureSourceText, CLAY_TEXT_CONFIG(ButtonTextConfig));
-            };
-        };
+        // CLAY_AUTO_ID({NameContainerLayoutConfig}){
+        //     CLAY_TEXT(DBPageHeaders[i].CreatureName, CLAY_TEXT_CONFIG(ButtonTextConfig));
+        // };
+
+        // CLAY_AUTO_ID({SizeCRContainerLayoutConfig}) {
+        //     /* change to be just size and type */
+        //     CLAY_AUTO_ID({CRContainerLayoutConfig}){
+        //         CLAY_TEXT(DBPageHeaders[i].CreatureCR, CLAY_TEXT_CONFIG(ButtonTextConfig));
+        //     };
+        //     CLAY_AUTO_ID({SizeContainerLayoutConfig}){
+        //         CLAY_TEXT(DBPageHeaders[i].CreatureSize, CLAY_TEXT_CONFIG(ButtonTextConfig));
+        //     };
+        // };
+        // CLAY_AUTO_ID({TypeSrcContainerLayoutConfig}) {
+        //     CLAY_AUTO_ID({TypeContainerLayoutConfig}) {
+        //         CLAY_TEXT(DBPageHeaders[i].CreatureType, CLAY_TEXT_CONFIG(ButtonTextConfig));
+        //     };
+        //     CLAY_AUTO_ID({SourceContainerLayoutConfig}) {
+        //         //CLAY_TEXT(CreatureSourceText, CLAY_TEXT_CONFIG(ButtonTextConfig));
+        //     };
+        // };
         // if (CREATURE_DB_SCREEN == CallingWindow) {
         //     Clay_OnHover(CallStatBlockCallback, &HeadersToShow[i]);
         // }
         // else if (BUILD_ENCOUNTER_SCREEN == CallingWindow) {
         //     Clay_OnHover(PlayerBuildListCallback, &DBPageHeaders[i].CreatureName);
-        // }      
+        // }
     };
 }
 
