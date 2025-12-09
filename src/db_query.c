@@ -147,11 +147,11 @@ static const char * BoundedStrStr(const char * haystack, const char * needle, si
 void ModifyTypedString(void) {
 
     // Error check to ensure there is something to delete
-    if (TypedText.length == 0) {
+    if (0 == SDL_strlen(TextBuffer)) {
         return;
     }
 
-    size_t i = TypedText.length - 1;
+    size_t i = SDL_strlen(TextBuffer) - 1;
 
     // Move backward to the start byte of the last UTF-8 character
     while (i > 0 && (TextBuffer[i] & 0xC0) == 0x80) {
@@ -160,6 +160,5 @@ void ModifyTypedString(void) {
     }
 
     // i now points to the start of the last UTF-8 character
-    TypedText.length = i;
     TextBuffer[i] = '\0';
 }
